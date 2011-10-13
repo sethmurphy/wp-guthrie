@@ -141,8 +141,6 @@
 				var data = '';
 				var url = settings.url;
 				var element_id = $this.attr("id"); 
-				
-				data += 
 
 				data += settings.element_id + '=' + encodeURIComponent(element_id)
 					+ '&action=' + encodeURIComponent(settings.action)
