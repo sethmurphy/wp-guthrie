@@ -1,0 +1,19 @@
+div.edit-in-place,
+.edit-in-place input { 
+  outline: none; 
+}
+.edit-in-place {
+  position: relative;
+  text-align: left;
+  display: block;
+  z-index: 0;
+}
+
+.edit-in-place:hover {
+  background: #5897FB;
+}
+.edit-in-place .field-editing {
+  background: #5897FB;
+  z-index: 9999;
+  position: absolute;
+}

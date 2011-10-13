@@ -1,0 +1,198 @@
+#profileInviteForm label,
+#profileInviteForm input,
+#profileInviteForm textarea,
+#profileInviteForm select,
+#profileInviteForm .profile-invite-email,
+#profileAddForm label,
+#profileAddForm input,
+#profileAddForm textarea,
+#profileAddForm select,
+#profileAddForm .profile-field
+{
+  vertical-align: top;
+}
+#profileInviteForm .profile-invite-email,
+#profileAddForm .profile-field {
+  height: 2.45em;
+	line-height: 2.45em;
+	float: left;
+}
+.field-roles.chzn-select,
+#profileInviteForm input,
+#profileInviteForm textarea,
+#profileInviteForm .profile-invite-email,
+#profileAddForm input,
+#profileAddForm textarea,
+#profileAddForm .profile-field {
+  width: 300px;
+}
+
+#profileInviteForm .profile-field select,
+#profileInviteForm .profile-field input,
+#profileInviteForm .profile-field textarea,
+#profileAddForm .profile-field select,
+#profileAddForm .profile-field input,
+#profileAddForm .profile-field textarea {
+  margin: 3px 3px 3px 3px;
+}
+.edit-in-place .editable {
+	padding-left: 8px;
+	display: block;
+}
+.profile-field-add-field-name-container,
+.field-instance-container label {
+	cursor: auto;
+}
+.field-instance-container .editable {
+	cursor: text;
+}
+.profile-invite-container label,
+.field-instance-add-container label,
+.field-instance-container label {
+  width: 120px;
+  display: block;
+  float: left;
+  text-align: left;
+  height: 2.45em;
+	line-height: 2.45em;
+}
+#profileInviteForm div.error,
+#profileInviteForm div.error,
+#profileInviteForm div.error,
+#profileAddForm div.error,
+#profileAddForm div.error,
+#profileAddForm div.error {
+	width: auto;
+	display: block;
+	float: left;
+	text-align: left;
+	height: 1.5em;
+	line-height: 1.5em;
+	margin: 2px 0 0 3px;
+}
+
+
+#profile-field-add-field-name-container,
+#profile-field-add-field-tag-container,
+#profile-field-add-field-description-container,
+#profile-field-add-field-value-container,
+#profile-field-add-field-type-container
+{
+	width: auto;
+	cursor: default;
+	clear: both;
+	padding-left: 3px;
+}
+
+#profile-invite-email-container label,
+#profile-invite-name-container label,
+#profile-invite-description-container label,
+#profile-invite-field-roles-container label,
+#profile-field-add-field-name-container label,
+#profile-field-add-field-tag-container label,
+#profile-field-add-field-description-container label,
+#profile-field-add-field-value-container label,
+#profile-field-add-field-type-container label
+{
+	width: 200px;
+	float: left;
+	display: block;
+	cursor: default;
+}
+
+#profile-invite-email-container input,
+#profile-invite-name-container input,
+#profile-invite-description-container textarea,
+#profile-invite-field-roles-container select,
+#profile-field-add-field-name-container input,
+#profile-field-add-field-tag-container input,
+#profile-field-add-field-description-container textarea,
+#profile-field-add-field-value-container textarea,
+#profile-field-add-field-type-container select
+{
+	width: 200px;
+	float: left;
+	display: block;
+	cursor: text;
+}
+#profile-invite-field-roles-container select,
+#profile-field-add-field-type-container select,
+button
+{
+	cursor: default;
+}
+#field-instance-add-button {
+	float: left;
+	clear: both;
+	width: 202px;
+	margin-left: 204px;
+	margin-bottom: 12px;
+}
+.profile-invite-container,
+.field-instance-add-container {
+	border-top: 3px solid #464646;
+	padding-top: 12px;	
+}
+.field-instance-add-button-container {
+	border-bottom: 4px dashed #E3E3E3;
+}
+h2.profile-fields {
+	margin-top: 2em;
+	margin-bottom: 12px;
+	padding: 0 0 3px 0;
+	border-bottom: solid 4px #464646;
+}
+h2.send-an-invite,
+h2.add-a-field {
+	margin-top: 2em;
+	margin-bottom: 3px;
+	padding: 0;
+}
+.clearfix {
+  clear: both;
+}
+.instructions {
+	font-size: .825em;
+	font-style: italic;
+	font-weight: normal;
+}
+.draggable-field-instance-helper {
+	background-color: #F3F3F3;
+}
+.draggable-vertical {
+	width: 32px;
+	height: 24px;
+	display: block;
+	float: left;
+}
+.profile-field-instance:hover .draggable-vertical,
+.draggable-field-instance-helper  .draggable-vertical {
+	background: url(drag-n-drop.png) no-repeat top left;
+	cursor: move;
+}
+
+.profile-field-instance:hover {
+	background-color: #F6F6F6;
+}
+
+#profile-field-instances .chzn-container-multi .chzn-choices {
+	cursor: pointer;
+}
+#draggable-field-instance-helper th,
+#draggable-field-instance-helper td label,
+#profile-fields td label,
+#profile-fields th {
+	white-space: nowrap;
+}
+.profile-field {
+	width: 300px;
+	line-height: 2.25em;
+}
+#profile-fields td label,
+#draggable-field-instance-helper td label{
+	width: 200px;
+	display: block;
+}
+#profile-fields td {
+	vertical-align: top;
+}
