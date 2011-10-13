@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA	02110-1301	USA
 
 class Guthrie_Admin_Options {
 	private $guthrie = null;
-
 	public $name_error = '';
 	public $tag_error = '';
 	public $type_error = '';
@@ -49,6 +48,7 @@ class Guthrie_Admin_Options {
 	function Guthrie_Admin_Options( $guthrie = null ) {
 		$this->__construct( $guthrie );
 	}
+
 	function __construct( $guthrie = null ) {
 		$this->guthrie = $guthrie;
 		
@@ -72,7 +72,6 @@ class Guthrie_Admin_Options {
 		}
 	
 		$description = trim( $_POST['profile-field-add-field-description'] );
-	
 	
 		$tag = trim( $_POST['profile-field-add-field-tag'] );
 		if( '' == $tag) {
