@@ -166,42 +166,56 @@ class Guthrie {
 	}
 	
 	function admin_print_scripts() {
-		// unregister our really old jquery bundled with WP
-		wp_deregister_script( 'jquery' );
-		wp_register_script( 'jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js' );
-		wp_enqueue_script( 'jquery' );
-		
-		// unregister our really old jquery bundled with WP
-		wp_deregister_script( 'jquery-ui' );
-		wp_register_script( 'jquery-ui', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js' );
-		wp_enqueue_script( 'jquery-ui' );
+
+		$scriptUrl = plugins_url( '/js/jquery.ui.min.js', __FILE__ );
+		$scriptFile = WP_PLUGIN_DIR . '/guthrie/js/jquery.ui.min.js';
+		if ( file_exists( $scriptFile ) ) {
+			wp_deregister_script( 'jquery-ui' );
+			wp_register_script( 'jquery-ui', $scriptUrl );
+			wp_enqueue_script( 'jquery-ui' );
+		} else {
+			wp_deregister_script( 'jquery-ui' );
+			wp_register_script( 'jquery-ui', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js' );
+			wp_enqueue_script( 'jquery-ui' );
+		}
+
+		$scriptUrl = plugins_url( '/js/jquery.min.js', __FILE__ );
+		$scriptFile = WP_PLUGIN_DIR . '/guthrie/js/jquery.min.js';
+		if ( file_exists( $scriptFile ) ) {
+			wp_deregister_script( 'jquery' );
+			wp_register_script( 'jquery', $scriptUrl );
+			wp_enqueue_script( 'jquery' );
+		} else {
+			wp_register_script( 'jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js' );
+			wp_enqueue_script( 'jquery' );
+		}
 
 		$scriptUrl = plugins_url( '/js/chosen.jquery.js', __FILE__ );
 		$scriptFile = WP_PLUGIN_DIR . '/guthrie/js/chosen.jquery.js';
 		if ( file_exists( $scriptFile ) ) {
-				wp_register_script( 'chosen', $scriptUrl );
-				wp_enqueue_script( 'chosen' );
+			wp_register_script( 'chosen', $scriptUrl );
+			wp_enqueue_script( 'chosen' );
 		}
 	
 		$scriptUrl = plugins_url( '/js/guthrie.js', __FILE__ );
 		$scriptFile = WP_PLUGIN_DIR . '/guthrie/js/guthrie.js';
 		if ( file_exists( $scriptFile ) ) {
-				wp_register_script( 'guthrie', $scriptUrl );
-				wp_enqueue_script( 'guthrie' );
+			wp_register_script( 'guthrie', $scriptUrl );
+			wp_enqueue_script( 'guthrie' );
 		}
 	
 		$scriptUrl = plugins_url( '/js/validate.js', __FILE__ );
 		$scriptFile = WP_PLUGIN_DIR . '/guthrie/js/validate.js';
 		if ( file_exists( $scriptFile ) ) {
-				wp_register_script( 'guthrie-validate', $scriptUrl );
-				wp_enqueue_script( 'guthrie-validate' );
+			wp_register_script( 'guthrie-validate', $scriptUrl );
+			wp_enqueue_script( 'guthrie-validate' );
 		}
 		
 		$scriptUrl = plugins_url( '/js/guthrie.editinplace.jquery.js', __FILE__ );
 		$scriptFile = WP_PLUGIN_DIR . '/guthrie/js/guthrie.editinplace.jquery.js';
 		if ( file_exists( $scriptFile ) ) {
-				wp_register_script( 'guthrie-editinplace', $scriptUrl );
-				wp_enqueue_script( 'guthrie-editinplace' );
+			wp_register_script( 'guthrie-editinplace', $scriptUrl );
+			wp_enqueue_script( 'guthrie-editinplace' );
 		}
 
 		/* our ajax files for the options page*/
@@ -212,8 +226,8 @@ class Guthrie {
 		$scriptUrl = plugins_url( '/js/ajax-update-field-roles.js', __FILE__ );
 		$scriptFile = WP_PLUGIN_DIR . '/guthrie/js/ajax-update-field-roles.js';
 		if ( file_exists( $scriptFile ) ) {
-				wp_register_script( 'guthrie-ajax-update-field-roles', $scriptUrl );
-				wp_enqueue_script( 'guthrie-ajax-update-field-roles' );
+			wp_register_script( 'guthrie-ajax-update-field-roles', $scriptUrl );
+			wp_enqueue_script( 'guthrie-ajax-update-field-roles' );
 		}
 
 	}

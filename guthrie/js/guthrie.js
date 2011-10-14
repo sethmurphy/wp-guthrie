@@ -96,7 +96,7 @@ document.handleDroppableFieldInstance = function( event, ui ) {
 };
 
 $( document ).ready( function() {
-	$( "#profile-field-instances .chzn-select" ).chosen( { no_results_text: 'No results matched. <button class="add-role-button">Add</button>' } ).change( document.updateFieldRoles );
+	$( "#profile-fields .chzn-select" ).chosen( { no_results_text: 'No results matched.' } ).change( document.updateFieldRoles );
 	$( ".profile-field" ).guthrieEditInPlace(
 		{
 			url:                   "/wp-admin/admin-ajax.php", // string: POST URL to send adjusted amount
@@ -119,7 +119,7 @@ $( document ).ready( function() {
 		drop: document.handleDroppableFieldInstance,
 		} );
 
-	$( "#profile-invite-field-roles-container .chzn-select" ).chosen( { no_results_text: 'No results matched.' } );
+	$( "#profileInviteForm .chzn-select" ).chosen( { no_results_text: 'No results matched.' } );
 
 
 });

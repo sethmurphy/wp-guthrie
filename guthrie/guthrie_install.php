@@ -21,20 +21,21 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA	02110-1301	USA
 
 class Guthrie_Install {
 	
-		private $TABLE_NAMES = array( 
-		  "profile_field",
-		  "profile_field_role",
-		  "profile_field_type",
-		  "profile_invitation",
-		  "profile_invitation_role",
-		  "profile_role",
-		  "profile_field_instance"
-		);
+	private $TABLE_NAMES = array( 
+	  "profile_field",
+	  "profile_field_role",
+	  "profile_field_type",
+	  "profile_invitation",
+	  "profile_invitation_role",
+	  "profile_role",
+	  "profile_field_instance"
+	);
 
 
 	function Guthrie_Install() {
 		$this->__construct();
 	}
+
 	function __construct() {
 	}
 
@@ -44,15 +45,21 @@ class Guthrie_Install {
 	 **********************************************************************/
 	function create_default_guthrie_profile_page() {
 		global $user_ID;
+		$pagename = 'my-guthrie';
 		$page['post_type']    = 'page';
 		$page['post_content'] = '[GUTHRIE]';
 		$page['post_parent']  = 0;
 		$page['post_author']  = $user_ID;
 		$page['post_status']  = 'publish';
 		$page['post_title']   = 'My Guthrie';
-		$page = apply_filters('guthrie_add_new_page', $page, 'profile');
+		$page = apply_filters('guthrie_add_new_page', $page, $page_name);
 		$pageid = wp_insert_post ($page);
-		if ($pageid == 0) { /* Add Page Failed */ } else { add_option( "guthrie_default_post_id", $pageid, $false, $false ); }
+		if ( $pageid == 0 ) { 
+			/* Add Page Failed */ 
+		} else { 
+			add_option( "guthrie_default_post_id", $pageid, $false, $false ); 
+			add_option( "guthrie_default_page_name", $pagename, $false, $false ); 
+		}
 	}
 	
 	/**********************************************************************
@@ -61,6 +68,7 @@ class Guthrie_Install {
 	function delete_default_guthrie_profile_page() {
 		wp_delete_post( get_option( "guthrie_default_post_id" ), true ); 
 		delete_option( "guthrie_default_post_id" );
+		delete_option( "guthrie_default_page_name" );
 	}
 
 	/**********************************************************************
