@@ -27,10 +27,11 @@ $guthrie = new Guthrie;
 
 class Guthrie {
 	public $status_message = '';
-	private $ajax = '';
+	private $ajax;
 	function Guthrie() {
 		$this->__construct();
 	}
+
 	function __construct() {
 		// constructor
 		// Do our install stuff upon activation
@@ -49,10 +50,17 @@ class Guthrie {
 		// register our ajax calls
 		// this should probably be somewhere else, but I couldn't get it to work if I called while loading the admin scripts.
 		add_action( 'wp_ajax_guthrie_update_profile_field_roles',          array( &$this, 'ajax_update_profile_field_roles' ) );          // action = 'guthrie_update_profile_field_roles'
+		add_action( 'wp_ajax_guthrie_update_profile_invitation_roles',          array( &$this, 'ajax_update_profile_invitation_roles' ) );          // action = 'guthrie_update_profile_invitation_roles'
 		add_action( 'wp_ajax_guthrie_update_profile_field_value',          array( &$this, 'ajax_update_profile_field_value' ) );          // action = 'guthrie_update_profile_field_value'
 		add_action( 'wp_ajax_guthrie_update_profile_field_sequence', array( &$this, 'ajax_update_profile_field_sequence' ) ); // action = 'guthrie_update_profile_field_sequence'	
 		add_action( 'wp_ajax_guthrie_remove_profile_field_instance', array( &$this, 'ajax_remove_profile_field_instance' ) ); // action = 'guthrie_remove_profile_field_instance'	
-	
+
+		add_action( 'wp_ajax_guthrie_update_profile_role_name',          array( &$this, 'ajax_update_profile_role_name' ) );          // action = 'guthrie_update_profile_role_name'
+		add_action( 'wp_ajax_guthrie_update_profile_role_description',          array( &$this, 'ajax_update_profile_role_description' ) );          // action = 'guthrie_update_profile_role_description'
+
+		add_action( 'wp_ajax_guthrie_update_profile_invitation_name',          array( &$this, 'ajax_update_profile_invitation_name' ) );          // action = 'guthrie_update_profile_invitation_name'
+		add_action( 'wp_ajax_guthrie_update_profile_invitation_description',          array( &$this, 'ajax_update_profile_invitation_description' ) );          // action = 'guthrie_update_profile_invitation_description'
+
 		add_action('wp_print_styles', array(&$this, 'add_guthrie_stylesheet'));
 	}
 	
@@ -222,12 +230,20 @@ class Guthrie {
 
 		wp_localize_script( 'guthrie-ajax-request', 'GuthrieAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
 
-		/* to update our roles in place */
+		/* to update our field roles in place */
 		$scriptUrl = plugins_url( '/js/ajax-update-field-roles.js', __FILE__ );
 		$scriptFile = WP_PLUGIN_DIR . '/guthrie/js/ajax-update-field-roles.js';
 		if ( file_exists( $scriptFile ) ) {
 			wp_register_script( 'guthrie-ajax-update-field-roles', $scriptUrl );
 			wp_enqueue_script( 'guthrie-ajax-update-field-roles' );
+		}
+
+		/* to update our invitation roles in place */
+		$scriptUrl = plugins_url( '/js/ajax-update-invitation-roles.js', __FILE__ );
+		$scriptFile = WP_PLUGIN_DIR . '/guthrie/js/ajax-update-invitation-roles.js';
+		if ( file_exists( $scriptFile ) ) {
+			wp_register_script( 'guthrie-ajax-update-invitation-roles', $scriptUrl );
+			wp_enqueue_script( 'guthrie-ajax-update-invitation-roles' );
 		}
 
 	}
@@ -248,7 +264,7 @@ class Guthrie {
 			if ( array_key_exists ( 'key', $_REQUEST ) ) {
 				$key = $_REQUEST['key'];
 			}
-			$invitation_id = 1;
+			$invitation_id = null;
 			if ( isset( $key ) && $key != "" ) {
 				// get our invitation by key		
 				$table_name = $wpdb->prefix . "guthrie_profile_invitation"; 
@@ -274,6 +290,7 @@ class Guthrie {
 			}
 			return $content;
 	}
+
 	/********************************
 	 *  See if we are a valid Email Address
 	 *******************************/
@@ -292,74 +309,103 @@ class Guthrie {
 		return preg_match( $pattern, $email );
 	}
 
+	/****************************************
+	 *  Data access methods
+	 *  These are used accross screens and may be called more than once due to the modular nature of the code
+	 *  Therefore they are cached in a private variable for each requests lifecyle
+	 ****************************************/
 	private $profile_field_types;
 	// get our types
 	function get_profile_field_types(){
-		if( ! isset( $profile_field_types ) ){
+		if( ! isset( $this->profile_field_types ) ){
 			global $wpdb;
 			$table_name = $wpdb->prefix . "guthrie_profile_field_type"; 
 			$sql = "SELECT * FROM $table_name;";
-			$profile_field_types = $wpdb->get_results( $sql, OBJECT );
+			$this->profile_field_types = $wpdb->get_results( $sql, OBJECT );
 		}
-		return $profile_field_types;
+		return $this->profile_field_types;
 	}
 	
-	private $profile_field_roles;
+	private $profile_roles;
 	// get our types
-	function get_profile_field_roles(){
-		if( ! isset( $profile_field_roles ) ){
+	function get_profile_roles(){
+		if( ! isset( $this->profile_roles ) ){
 			global $wpdb;
 			$table_name = $wpdb->prefix . "guthrie_profile_role"; 
-	$sql = "select pr.id, pr.name " .
-					"from $table_name as pr " .
-					"order by sequence, id;";
-			$profile_field_roles = $wpdb->get_results( $sql, OBJECT );
+			$sql = "SELECT pr.id, pr.name, pr.description " .
+					"FROM $table_name AS pr " .
+					"ORDER BY sequence, id;";
+			$this->profile_roles = $wpdb->get_results( $sql, OBJECT );
 		}
-		return $profile_field_roles;
+		return $this->profile_roles;
 	}
 
+	private $profile_invitations;
+	// get our invitations
+	function get_profile_invitations(){
+		if( ! isset( $this->profile_invitations ) ){
+			global $wpdb;
+			$table_name = $wpdb->prefix . "guthrie_profile_invitation"; 
+			$sql = "SELECT pi.id, pi.name, pi.description, pi.email, pi.guid, group_concat(ir.profile_role_id) as roles " .
+			       "FROM $table_name as pi " .
+			       "LEFT JOIN " . $wpdb->prefix . "guthrie_profile_invitation_role ir ON ir.profile_invitation_id = pi.id " .
+			       "GROUP BY pi.id ".
+				   "ORDER BY pi.id;";
+			$this->profile_field_roles = $wpdb->get_results( $sql, OBJECT );
+		}
+		return $this->profile_field_roles;
+	}
 
+	private $profile_field_instances;
 	function get_profile_field_instances( $invitation_id = null ){
-		global $wpdb;
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		$where_clause = '';
-		$invitation_join = '';
-		if( isset( $invitation_id ) ){
-			$invitation_join .= "LEFT JOIN guthrie_guthrie_profile_invitation_role ir ON ir.profile_role_id = r.id ";
-			$invitation_join .= "LEFT JOIN guthrie_guthrie_profile_invitation i ON i.id = ir.profile_invitation_id ";
-			$where_clause = "WHERE i.id=" . $invitation_id . " ";
-		}
-	  $sql = "SELECT f.id, fi.id AS profile_field_instance_id, f.tag, f.name, f.description, fi.value, group_concat(r.id) AS roles " .
-        "FROM guthrie_guthrie_profile_field_instance as fi " .
-        "LEFT JOIN guthrie_guthrie_profile_field f ON f.id = fi.profile_field_id " .
-        "LEFT JOIN guthrie_guthrie_profile_field_role fr ON f.id = fr.profile_field_id " .
-        "LEFT JOIN guthrie_guthrie_profile_role r ON r.id = fr.profile_role_id " .
-        $invitation_join .
-				$where_clause .
-        "GROUP BY f.id " .
-        "ORDER BY fi.sequence, f.sequence, r.sequence, profile_field_instance_id;";
-		//echo($sql);
-  	$profile_field_instances = $wpdb->get_results( $sql, OBJECT );
-  	return $profile_field_instances;
+		if( ! isset( $this->profile_field_instances ) ){
+			global $wpdb;
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			$where_clause = '';
+			$invitation_join = '';
+			echo('$invitation_id = ' . $invitation_id);
+			if( isset( $invitation_id ) ){
+				$invitation_join .= 'LEFT JOIN ' . $wpdb->prefix . 'guthrie_profile_invitation_role ir ON ir.profile_role_id = r.id ';
+				$invitation_join .= 'LEFT JOIN ' . $wpdb->prefix . 'guthrie_profile_invitation i ON i.id = ir.profile_invitation_id ';
+				$where_clause = 'WHERE i.id=' . $invitation_id . ' ';
+			} else {
+				$where_clause = 'WHERE r.id=1 '; // default public profile
+			}
+			$sql = 'SELECT f.id, fi.id AS profile_field_instance_id, f.tag, f.name, f.description, fi.value, group_concat(r.id) AS roles ' .
+				   'FROM ' . $wpdb->prefix . 'guthrie_profile_field_instance as fi ' .
+				   'LEFT JOIN ' . $wpdb->prefix . 'guthrie_profile_field f ON f.id = fi.profile_field_id ' .
+				   'LEFT JOIN ' . $wpdb->prefix . 'guthrie_profile_field_role fr ON f.id = fr.profile_field_id ' .
+				   'LEFT JOIN ' . $wpdb->prefix . 'guthrie_profile_role r ON r.id = fr.profile_role_id ' .
+				   $invitation_join .
+				   $where_clause .
+				   'GROUP BY f.id ' .
+				   'ORDER BY fi.sequence, f.sequence, r.sequence, profile_field_instance_id;';
+			//echo($sql);
+			$this->profile_field_instances = $wpdb->get_results( $sql, OBJECT );
+		}			
+		return $this->profile_field_instances;
 	}
+
+	/****************************************
+	 *  End data access methods
+	 ****************************************/
 
 	/***************************************************
 	 *  Wrappers for our AJAX calls in guthrie_ajax.php
 	 ***************************************************/
 	function initAJAX(){
-		if( ! isset( $guthrie_ajax ) ) {
+		if( ! isset( $this->ajax ) ) {
 			require_once( 'guthrie_ajax.php' );
 			$this->ajax = new Guthrie_Ajax( &$this );
 		}
 	}
 
-  function ajax_update_profile_field_sequence() {
+	function ajax_update_profile_field_sequence() {
 		$this->initAJAX();
 		$this->ajax->update_profile_field_sequence();
 	}
 
-
-  function ajax_update_profile_field_value() {
+	function ajax_update_profile_field_value() {
 		$this->initAJAX();
 		$this->ajax->update_profile_field_value();
 	}
@@ -374,6 +420,30 @@ class Guthrie {
 		$this->ajax->remove_profile_field_instance();
 	}	
 
+	function ajax_update_profile_role_name() {
+		$this->initAJAX();
+		$this->ajax->update_profile_role_name();
+	}
+
+	function ajax_update_profile_role_description() {
+		$this->initAJAX();
+		$this->ajax->update_profile_role_description();
+	}
+
+	function ajax_update_profile_invitation_name() {
+		$this->initAJAX();
+		$this->ajax->update_profile_invitation_name();
+	}
+
+	function ajax_update_profile_invitation_description() {
+		$this->initAJAX();
+		$this->ajax->update_profile_invitation_description();
+	}
+
+	function ajax_update_profile_invitation_roles() {
+		$this->initAJAX();
+		$this->ajax->update_profile_invitation_roles();
+	}	
 
 	/*******************************************************
 	 *  End of AJAX wrappers

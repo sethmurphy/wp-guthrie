@@ -55,31 +55,31 @@ class Guthrie_Admin_Options_Profile {
 		global $wpdb;
 		$has_error = false;
 
-		$name = trim( $_POST['profile-field-add-field-name'] );
+		$this->name = trim( $_POST['profile-field-add-field-name'] );
 		if( '' === $name ) {
 			$this->name_error = 'Please enter the fields name.';
 			$has_error = true;
 		}
 	
-		$description = trim( $_POST['profile-field-add-field-description'] );
+		$this->description = trim( $_POST['profile-field-add-field-description'] );
 	
-		$tag = trim( $_POST['profile-field-add-field-tag'] );
-		if( '' == $tag) {
+		$this->tag = trim( $_POST['profile-field-add-field-tag'] );
+		if( '' == $this->tag) {
 			$this->tag_error = 'Please enter a field tag.';
 			$has_error = true;
-		} else if ( ! ereg ("^[A-Za-z0-9\-]{" . strlen( $tag ) . "}", $tag ) ) {
-			$tag_error = 'Please enter a valid field tag containing only letters, numbers or hyphens.';
+		} else if ( ! ereg ("^[A-Za-z0-9\-]{" . strlen( $this->tag ) . "}", $this->tag ) ) {
+			$this->tag_error = 'Please enter a valid field tag containing only letters, numbers or hyphens.';
 			$has_error = true;
 		}
 	
-		$type = trim($_POST['profile-field-add-field-name']);
-		if( '' == $type ) {
+		$this->type = trim($_POST['profile-field-add-field-name']);
+		if( '' == $this->type ) {
 			$this->name_error = 'Please select a field type.';
 			$has_error = true;
 		}
 	
-		$value = trim( $_POST['profile-field-add-field-value'] );
-		if( '' == $value ) {
+		$this->value = trim( $_POST['profile-field-add-field-value'] );
+		if( '' == $this->value ) {
 			$this->value_error = 'Please enter the value.';
 			$has_error = true;
 		}
@@ -93,10 +93,10 @@ class Guthrie_Admin_Options_Profile {
 			$rows_affected = $wpdb->insert( $table_name, array( 
 				'time' => current_time( 'mysql' ), 
 				'id' => null, 
-				'profile_field_type_id' => $type, 
-				'name' => $name, 
-				'tag' => $tag, 
-				'description' => $description, 
+				'profile_field_type_id' => $this->type, 
+				'name' => $this->name, 
+				'tag' => $this->tag, 
+				'description' => $this->description, 
 				'sequence' => 99999 ) 
 			);
 			
@@ -110,17 +110,17 @@ class Guthrie_Admin_Options_Profile {
 				'time' => current_time( 'mysql' ), 
 				'id' => null, 
 				'profile_field_id' => $profile_field_id, 
-				'value' => $value ) 
+				'value' => $this->value ) 
 			);
 
 			$this->guthrie->status_message = "Added field!";
 			$this->guthrie->show_admin_messages( false );
 	
-			$tag = '';
-			$name = '';
-			$description = '';
-			$type = '';
-			$value = '';
+			$this->tag = '';
+			$this->name = '';
+			$this->description = '';
+			$this->type = '';
+			$this->value = '';
 		}
 	} 
 }

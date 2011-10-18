@@ -10,8 +10,8 @@
 					action:               "guthrie_update_profile_field_value", // string: POST URL to send adjusted amount
 					input_width:          "134", // integer: value for width
 					element_id:           "element_id", // string: the id of the element to insert the returned value in
-					field_instance_id:    "field_instance_id", // string: the id of the element to insert the returned value in
-					field_value:          "value", // string: parameter name for the adjustment value
+					field_id_name:	      "id", // string: the id of the element to insert the returned value in
+					field_value_name:     "value", // string: parameter name for the adjustment value
 					original_field_value: "original_value" // string: parameter name for the adjustment value
 				};
 				if ( options ) {
@@ -88,12 +88,12 @@
 				var field_value = field_input.val();
 				var original_field_value = $this.data("original-field-value");
 				var id = $this.attr("id");
-				var profile_field_instance_id = id.substring(id.lastIndexOf("_") + 1);
+				var field_id = id.substring(id.lastIndexOf("_") + 1);
 
 				field_input.unbind('blur.fieldEvents');
 
 				if( field_value !== original_field_value){
-					methods.submit_to_server($this, profile_field_instance_id, field_value, original_field_value);
+					methods.submit_to_server($this, field_id, field_value, original_field_value);
 				}
 				methods.breakdown_control(event);
 			},
@@ -135,7 +135,7 @@
 			/******************************************************
 			 ** Submits our data to the server
 			 ******************************************************/
-			submit_to_server: function(element, profile_field_instance_id, new_value, original_value) {
+			submit_to_server: function(element, field_id, new_value, original_value) {
 				var $this = $(element);
 				var settings = $this.data("settings");
 				var data = '';
@@ -145,8 +145,8 @@
 				data += settings.element_id + '=' + encodeURIComponent(element_id)
 					+ '&action=' + encodeURIComponent(settings.action)
 					+ '&' + settings.original_field_value + '=' + encodeURIComponent(original_value)
-					+ '&' + settings.field_value + '=' + encodeURIComponent(new_value)
-					+ '&' + settings.field_instance_id + '=' + encodeURIComponent(profile_field_instance_id);
+					+ '&' + settings.field_value_name + '=' + encodeURIComponent(new_value)
+					+ '&' + settings.field_id_name + '=' + encodeURIComponent(field_id);
 
 				$.ajax({
 					url: url,

@@ -28,7 +28,7 @@ document.handleDroppableFieldInstance = function( event, ui ) {
 	var data = 'action=guthrie_update_profile_field_sequence' 
 					 + '&original_field_instance_id=' + encodeURIComponent( original_field_instance_id ) 
 					 + '&original_field_instance_index=' + encodeURIComponent( original_field_instance_index ) 
-					 + '&field_instance_id=' + encodeURIComponent( field_instance_id ) 
+					 + '&field_id_name=' + encodeURIComponent( field_instance_id ) 
 					 + '&field_instance_index=' + encodeURIComponent( field_instance_index );
 
 	$.ajax( {
@@ -97,17 +97,70 @@ document.handleDroppableFieldInstance = function( event, ui ) {
 
 $( document ).ready( function() {
 	$( "#profile-fields .chzn-select" ).chosen( { no_results_text: 'No results matched.' } ).change( document.updateFieldRoles );
+	$( ".invitation-roles" ).chosen( { no_results_text: 'No results matched.' } ).change( document.updateInvitationRoles );
+	
+	
 	$( ".profile-field" ).guthrieEditInPlace(
 		{
 			url:                   "/wp-admin/admin-ajax.php", // string: POST URL to send adjusted amount
 			action:                "guthrie_update_profile_field_value", // string: POST URL to send adjusted amount
 			input_width:           "290", // integer: value for width
 			element_id:            "element_id", // string: the id of the element to insert the returned value in
-			field_instance_id:     "field_instance_id", // string: the id of the element to insert the returned value in
-			field_value:           "value", // string: parameter name for the adjustment value
+			field_id_name:         "field_instance_id", // string: the id of the element to insert the returned value in
+			field_value_name:      "value", // string: parameter name for the adjustment value
 			original_field_value:  "original_value" // string: parameter name for the adjustment value
 		}
 	);
+
+	$( ".profile-role-name" ).guthrieEditInPlace(
+		{
+			url:                   "/wp-admin/admin-ajax.php", // string: POST URL to send adjusted amount
+			action:                "guthrie_update_profile_role_name", // string: POST URL to send adjusted amount
+			input_width:           "290", // integer: value for width
+			element_id:            "element_id", // string: the id of the element to insert the returned value in
+			field_id_name:         "role_id", // string: the id of the element to insert the returned value in
+			field_value_name:      "name", // string: parameter name for the adjustment value
+			original_field_value:  "original_value" // string: parameter name for the adjustment value
+		}
+	);
+
+	$( ".profile-role-description" ).guthrieEditInPlace(
+		{
+			url:                   "/wp-admin/admin-ajax.php", // string: POST URL to send adjusted amount
+			action:                "guthrie_update_profile_role_description", // string: POST URL to send adjusted amount
+			input_width:           "290", // integer: value for width
+			element_id:            "element_id", // string: the id of the element to insert the returned value in
+			field_id_name:         "role_id", // string: the id of the element to insert the returned value in
+			field_value_name:      "description", // string: parameter name for the adjustment value
+			original_field_value:  "original_value" // string: parameter name for the adjustment value
+		}
+	);
+
+	$( ".profile-invitation-name" ).guthrieEditInPlace(
+		{
+			url:                   "/wp-admin/admin-ajax.php", // string: POST URL to send adjusted amount
+			action:                "guthrie_update_profile_invitation_name", // string: POST URL to send adjusted amount
+			input_width:           "290", // integer: value for width
+			element_id:            "element_id", // string: the id of the element to insert the returned value in
+			field_id_name:         "invitation_id", // string: the id of the element to insert the returned value in
+			field_value_name:      "name", // string: parameter name for the adjustment value
+			original_field_value:  "original_value" // string: parameter name for the adjustment value
+		}
+	);
+
+	$( ".profile-invitation-description" ).guthrieEditInPlace(
+		{
+			url:                   "/wp-admin/admin-ajax.php", // string: POST URL to send adjusted amount
+			action:                "guthrie_update_profile_invitation_description", // string: POST URL to send adjusted amount
+			input_width:           "290", // integer: value for width
+			element_id:            "element_id", // string: the id of the element to insert the returned value in
+			field_id_name:         "invitation_id", // string: the id of the element to insert the returned value in
+			field_value_name:      "description", // string: parameter name for the adjustment value
+			original_field_value:  "original_value" // string: parameter name for the adjustment value
+		}
+	);
+	
+
 
 	$( ".draggable-field-handle" ).draggable( { 
 		containment: $( '#profile-field-instances' ),
@@ -120,6 +173,5 @@ $( document ).ready( function() {
 		} );
 
 	$( "#profileInviteForm .chzn-select" ).chosen( { no_results_text: 'No results matched.' } );
-
 
 });

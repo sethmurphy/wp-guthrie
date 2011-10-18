@@ -45,7 +45,7 @@ class Guthrie_Admin_Options {
 	function __construct( $guthrie = null ) {
 		$this->guthrie = $guthrie;
 		
-		$this->profile_roles = $guthrie->get_profile_field_roles();
+		$this->profile_roles = $guthrie->get_profile_roles();
 
 		$this->current_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : $this->default_tab;
 		

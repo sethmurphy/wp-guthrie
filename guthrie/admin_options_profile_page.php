@@ -8,7 +8,7 @@ global $guthrie;
 global $admin_options;
 
 $profile_field_instances = $guthrie->get_profile_field_instances();
-$profile_roles = $guthrie->get_profile_field_roles();
+$profile_roles = $guthrie->get_profile_roles();
 $profile_field_types = $guthrie->get_profile_field_types();
 $admin_options_tab = $admin_options->admin_options_tab;
 ?>
@@ -119,6 +119,6 @@ $admin_options_tab = $admin_options->admin_options_tab;
 		</tbody>
 	</table>
 	<p class="submit">
-		<button class=button-primary" id="field-instance-add-button" type="submit">Add Field</button>
+		<button class="button-primary" id="field-instance-add-button" type="submit">Add Field</button>
 	</p>
 </form>
