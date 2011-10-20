@@ -21,13 +21,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA	02110-1301	USA
 global $admin_options;
 
 class Guthrie_Admin_Options {
-	private $guthrie = null;
-
-	public $profile_invite_field_roles = array();
-	public $profile_roles = array();
-
-	public $admin_options_tab;
-
 	public $current_tab = '';
 
 	private $default_tab = 'profile';
@@ -43,30 +36,24 @@ class Guthrie_Admin_Options {
 	}
 
 	function __construct( $guthrie = null ) {
-		$this->guthrie = $guthrie;
-		
-		$this->profile_roles = $guthrie->get_profile_roles();
+		// get our requested tab if valid, otherwise the default one
+		$this->current_tab = isset( $_GET['tab'] ) && array_key_exists($_GET['tab'], $this->option_tabs ) ? $_GET['tab'] : $this->default_tab;
 
-		$this->current_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : $this->default_tab;
-		
+		// create the appropriate object for the tab
 		require ( 'admin_options_' . $this->current_tab . '.php' );
-
-		global $admin_options;
-		$admin_options = $this;
-
-		$this->admin_options_tab = call_user_func( 'Guthrie_Admin_Options_' . ucfirst( $this->current_tab) . '::factory', $guthrie, $admin_options);
+		$this->admin_options_tab = call_user_func( 'Guthrie_Admin_Options_' . ucfirst( $this->current_tab) . '::factory', $guthrie, $this);
 	}
-
-	function tabs() {
-
+	
+	function create_tabs() {
+		// create our tabs
 		screen_icon();
-		echo '<h2 class="nav-tab-wrapper">';
+		echo '<h2>Guthrie Settings</h2>';
+		echo '<h3 class="nav-tab-wrapper">';
 		foreach ( $this->option_tabs as $tab_key => $tab_caption ) {
 			$active = $this->current_tab == $tab_key ? 'nav-tab-active' : '';
 			echo '<a class="nav-tab ' . $active . '" href="?page=guthrie&tab=' . $tab_key . '">' . $tab_caption . '</a>';
 		}
-		echo '</h2>';
+		echo '</h3>';
 	}
 }
 ?>
-

@@ -52,13 +52,13 @@ class Guthrie_Install {
 		$page['post_author']  = $user_ID;
 		$page['post_status']  = 'publish';
 		$page['post_title']   = 'My Guthrie';
-		$page = apply_filters('guthrie_add_new_page', $page, $page_name);
+		$page = apply_filters('guthrie_add_new_page', $page, $pagename);
 		$pageid = wp_insert_post ($page);
 		if ( $pageid == 0 ) { 
 			/* Add Page Failed */ 
 		} else { 
-			add_option( "guthrie_default_post_id", $pageid, $false, $false ); 
-			add_option( "guthrie_default_page_name", $pagename, $false, $false ); 
+			add_option( "guthrie_default_post_id", $pageid, false, false ); 
+			add_option( "guthrie_default_page_name", $pagename, false, false ); 
 		}
 	}
 	
@@ -328,8 +328,5 @@ class Guthrie_Install {
 				$wpdb->query( $sql );
 			}
 		}
-	
 	}
-
 }
-?>

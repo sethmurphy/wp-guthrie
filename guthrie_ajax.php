@@ -317,17 +317,67 @@ class Guthrie_Ajax {
 		$value = '';
 		$field_instance_id = '';
 		$original_value = '';
-		if( array_key_exists ( 'field_instance_id' , $_POST ) &&
-		    array_key_exists ( 'field_instance_index' , $_POST ) ) {
+		if( array_key_exists ( 'field_instance_id' , $_POST ) ) {
 			$field_instance_id = $_POST[ 'field_instance_id' ];
-			$field_instance_index = $_POST[ 'field_instance_index' ];
 			$table_name = $wpdb->prefix . "guthrie_profile_field_instance";
-			$sql = "DELETE FROM " . $table_name . " WHERE id = $field_instance_id LIMIT 1";
+			$sql = $wpdp->prepare( "DELETE FROM $table_name WHERE id = %d", $field_instance_id );
 			//echo($sql);
 			$wpdb->query( $sql );
 			$success = true;
 		}
 		$response = json_encode( array( 'remove_profile_field_instance_success' => $success ) );
+
+		// response output
+		header( "Content-Type: application/json" );
+		echo $response;
+
+		// IMPORTANT: don't forget to "exit"
+		exit;
+	}
+
+	function remove_profile_invitation() {
+		$success = false;
+		global $wpdb;
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+		$element_id = '';
+		$value = '';
+		$profile_invitation = '';
+		$original_value = '';
+		if( array_key_exists ( 'profile_invitation_id' , $_POST ) ) {
+			$profile_invitation_id = $_POST[ 'profile_invitation_id' ];
+			$table_name = $wpdb->prefix . "guthrie_profile_invitation";
+			$sql = $wpdb->prepare( "DELETE FROM $table_name WHERE id = %d", $profile_invitation_id );
+			$wpdb->query( $sql );
+			$success = true;
+		}
+		$response = json_encode( array( 'remove_invitation_success' => $success ) );
+
+		// response output
+		header( "Content-Type: application/json" );
+		echo $response;
+
+		// IMPORTANT: don't forget to "exit"
+		exit;
+	}
+
+	function remove_profile_role() {
+		$success = false;
+		global $wpdb;
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+		$element_id = '';
+		$value = '';
+		$profile_invitation = '';
+		$original_value = '';
+		if( array_key_exists ( 'profile_role_id' , $_POST ) ) {
+			$profile_role_id = $_POST[ 'profile_role_id' ];
+			$table_name = $wpdb->prefix . "guthrie_profile_role";
+			$sql = $wpdb->prepare( "DELETE FROM $table_name WHERE id = %d", $profile_invitation_id );
+			$wpdb->query( $sql );
+			$success = true;
+		}
+		$response = json_encode( array( 'remove_invitation_success' => $success ) );
 
 		// response output
 		header( "Content-Type: application/json" );
@@ -493,4 +543,3 @@ class Guthrie_Ajax {
 		exit;
 	}
 }
-?>

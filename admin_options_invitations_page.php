@@ -1,9 +1,28 @@
 <?php
 /*
+Author: Seth Murphy
+Author URI: http://sethmurphy.com
+License: GPL2
+Copyright 2011	Seth Murphy	(email : seth@sethmurphy.com)
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License, version 2, AS 
+published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA	02110-1301	USA
+*/
+
+/*
 Manage our invitations
 */
-?>
-<?php 
+
 global $guthrie;
 global $admin_options;
 
@@ -19,10 +38,11 @@ $admin_options_tab = $admin_options->admin_options_tab;
 			<th>Name <span class="instructions">(click to edit in place)</span></th>
 			<th>Description <span class="instructions">(click to edit in place)</span></th>
 			<th>Relationships</th>
-			<th>GUID</th>
+			<th>Profile Link</th>
+			<th />
 		</tr>
 	</thead>
-	<tbody id="profile-invitations">
+	<tbody>
 	<?php $i=0; ?>
 	<?php foreach ($profile_invitations as $invitation): ?>
 		<tr class="profile-invitation" id="invitation_<?php echo($invitation->id); ?>" tabindex="<?php echo( $i ) ?>" >
@@ -46,7 +66,8 @@ $admin_options_tab = $admin_options->admin_options_tab;
 					<?php endforeach; ?>
 				</select>
 			</td>
-			<td valign="top"><div id="guid_<?php echo($invitation->id); ?>" name="guid_<?php echo($invitation->id); ?>" class="profile-invitation-guid"><?php echo($invitation->guid); ?></div></td>
+			<td valign="top"><a href="<?php echo( $admin_options_tab->generate_profile_url( $invitation->guid ) ); ?>" id="guid_<?php echo($invitation->id); ?>" name="guid_<?php echo($invitation->id); ?>" class="profile-invitation-guid"><?php echo( $admin_options_tab->generate_profile_url( $invitation->guid ) ); ?></a></td>
+			<td valign="top" class="delete">&nbsp;</td>
 		</tr>
 	<?php endforeach; ?>
 	</tbody>
@@ -54,7 +75,7 @@ $admin_options_tab = $admin_options->admin_options_tab;
 
 <h3 class="send-an-invite">Send an Invitation</h3>
 <form action="<?php the_permalink(); ?>" id="profileInviteForm" method="post">
-	<input type="hidden" name="submitted" id="submitted" value="true" />
+	<input type="hidden" name="profile-invite-submitted" id="profile-invite-submitted" value="true" />
 	<table class="form-table">
 		<tbody>
 			<tr valign="top">
@@ -62,10 +83,10 @@ $admin_options_tab = $admin_options->admin_options_tab;
 					<label for="profile-invite-email">Email</label>
 				</th>
 				<td>
-					<input type="text" name="profile-invite-email" id="profile-invite-email" value="<?php echo( $admin_options_tab->profile_invite_email ); ?>"  class="regular-text" />
+					<input type="text" name="profile-invite-email" id="profile-invite-email" value="<?php echo( $admin_options_tab->email ); ?>"  class="regular-text" />
 					<span class="description">required</span>
-					<?php if ( ! ('' == $admin_options_tab->profile_invite_email_error) ) : ?>
-						<div class="error"><?php echo($admin_options_tab->profile_invite_email_error); ?></div>
+					<?php if ( ! ('' == $admin_options_tab->email_error) ) : ?>
+						<div class="error"><?php echo($admin_options_tab->email_error); ?></div>
 					<?php endif; ?>
 				</td>
 			</tr>
@@ -74,9 +95,9 @@ $admin_options_tab = $admin_options->admin_options_tab;
 					<label for="profile-invite-name">Name </label>
 				</th>
 				<td>
-					<input type="text" name="profile-invite-name" id="profile-invite-name" value="<?php echo( $admin_options_tab->profile_invite_name ); ?>"  class="regular-text" />
-					<?php if ( ! ('' == $admin_options_tab->profile_invite_name_error) ) : ?>
-						<div class="error"><?php echo($admin_options_tab->profile_invite_name_error); ?></div>
+					<input type="text" name="profile-invite-name" id="profile-invite-name" value="<?php echo( $admin_options_tab->name ); ?>"  class="regular-text" />
+					<?php if ( ! ('' == $admin_options_tab->name_error) ) : ?>
+						<div class="error"><?php echo($admin_options_tab->name_error); ?></div>
 					<?php endif; ?>
 				</td>
 			</tr>
@@ -85,9 +106,9 @@ $admin_options_tab = $admin_options->admin_options_tab;
 					<label for="profile-invite-description">Description </label>
 				</th>
 				<td>
-					<input type="text" name="profile-invite-description" id="profile-invite-description" value="<?php echo( $admin_options_tab->profile_invite_description ); ?>"  class="regular-text" />
-					<?php if ( ! ('' == $admin_options_tab->profile_invite_description_error) ) : ?>
-						<div class="error"><?php echo($admin_options_tab->profile_invite_description_error); ?></div>
+					<input type="text" name="profile-invite-description" id="profile-invite-description" value="<?php echo( $admin_options_tab->description ); ?>"  class="regular-text" />
+					<?php if ( ! ('' == $admin_options_tab->description_error) ) : ?>
+						<div class="error"><?php echo($admin_options_tab->description_error); ?></div>
 					<?php endif; ?>
 				</td>
 			</tr>
@@ -96,7 +117,7 @@ $admin_options_tab = $admin_options->admin_options_tab;
 					<label for="profile-invite-field-roles">Relationships </label>
 				</th>
 				<td>
-					<select multiple class="profile-invite-field-roles chzn-select roles-select" name="profile-invite-field-roles" id="profile-invite-field-roles" data-placeholder="Choose a role...">
+					<select multiple class="profile-invite-roles chzn-select roles-select" name="profile-invite-roles" id="profile-invite-roles" data-placeholder="Choose a role...">
 						<option value=""></option>
 
 						<?php foreach ($profile_roles as $role): ?>
@@ -105,8 +126,8 @@ $admin_options_tab = $admin_options->admin_options_tab;
 					</select>
 		
 
-					<?php if ( ! ('' == $admin_options_tab->profile_invite_field_roles_error) ) : ?>
-						<div class="error"><?php echo($admin_options_tab->profile_invite_field_roles_error); ?></div>
+					<?php if ( ! ('' == $admin_options_tab->roles_error) ) : ?>
+						<div class="error"><?php echo($admin_options_tab->roles_error); ?></div>
 					<?php endif; ?>
 				</td>
 			</tr>
@@ -116,4 +137,3 @@ $admin_options_tab = $admin_options->admin_options_tab;
 		<button class="button-primary" id="field-instance-add-button" type="submit">Send Invitation</button>
 	</p>
 </form>
-

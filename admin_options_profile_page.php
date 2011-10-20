@@ -1,9 +1,27 @@
 <?php
 /*
+Author: Seth Murphy
+Author URI: http://sethmurphy.com
+License: GPL2
+Copyright 2011	Seth Murphy	(email : seth@sethmurphy.com)
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License, version 2, AS 
+published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA	02110-1301	USA
+*/
+/*
 Manage our profile
 */
-?>
-<?php 
+
 global $guthrie;
 global $admin_options;
 
@@ -12,7 +30,7 @@ $profile_roles = $guthrie->get_profile_roles();
 $profile_field_types = $guthrie->get_profile_field_types();
 $admin_options_tab = $admin_options->admin_options_tab;
 ?>
-<h2 class="profile-fields">Profile Fields</h2>
+<h3 class="profile-fields">Profile Fields</h3>
 <table id="profile-fields">
 	<thead>
 		<tr>
@@ -20,9 +38,10 @@ $admin_options_tab = $admin_options->admin_options_tab;
 			<th>Name [tag]</th>
 			<th>Value <span class="instructions">(click to edit in place)</span></th>
 			<th>Roles</th>
+			<th />
 		</tr>
 	</thead>
-	<tbody id="profile-field-instances">
+	<tbody>
 	<?php $i=0; ?>
 	<?php foreach ($profile_field_instances as $field): ?>
 		<tr class="profile-field-instance" id="field-instance_<?php echo($field->id); ?>" tabindex="<?php echo( $i ) ?>" >
@@ -45,17 +64,18 @@ $admin_options_tab = $admin_options->admin_options_tab;
 					<?php endforeach; ?>
 				</select>
 			</td>
+			<td valign="top" class="delete">&nbsp;</td>
 		</tr>
 	<?php endforeach; ?>
 	</tbody>
 </table>
 
 <form action="<?php the_permalink(); ?>" id="profileAddForm" method="post">
-	<h2 class="add-a-field">Add a Field</h2>
-	<input type="hidden" value="submitted" name="submitted" />
+	<h3 class="add-a-field">Add a Field</h3>
+	<input type="hidden" value="profile-field-submitted" name="profile-field-submitted" />
 	<table class="form-table">
 		<tbody>
-			<tr>
+			<tr valign="top">
 				<th class="row">
 					<label for="profile-field-add-field-name">Name </label>
 				</th>
@@ -67,7 +87,7 @@ $admin_options_tab = $admin_options->admin_options_tab;
 					<?php endif; ?>
 				</td>
 			</tr>
-			<tr>
+			<tr valign="top">
 				<th class="row">
 					<label for="profile-field-add-field-tag">Tag </label>
 				</th>
@@ -79,7 +99,7 @@ $admin_options_tab = $admin_options->admin_options_tab;
 					<?php endif; ?>
 				</td>
 			</tr>
-			<tr>
+			<tr valign="top">
 				<th class="row">
 					<label for="profile-field-add-field-type">Type </label>
 				</th>
@@ -97,7 +117,7 @@ $admin_options_tab = $admin_options->admin_options_tab;
 					<?php endif; ?>
 				</td>
 			</tr>
-			<tr>
+			<tr valign="top">
 				<th class="row">
 					<label for="profile-field-add-field-description">Description</label>
 				</th>
@@ -105,7 +125,7 @@ $admin_options_tab = $admin_options->admin_options_tab;
 					<textarea height="5" name="profile-field-add-field-description" id="profile-field-add-field-description"><?php echo( $admin_options_tab->description ); ?></textarea>
 				</td>
 			</tr>
-			<tr>
+			<tr valign="top">
 				<th class="row">
 					<label for="profile-field-add-field-value">Value</label>
 				</th>
@@ -116,6 +136,26 @@ $admin_options_tab = $admin_options->admin_options_tab;
 					<?php endif; ?>
 				</td>
 			</tr>
+			<tr valign="top">
+				<th class="row">
+					<label for="profile-field-add-roles">Relationships </label>
+				</th>
+				<td>
+					<select multiple class="profile-field-add-roles chzn-select roles-select" name="profile-field-add-roles" id="profile-field-add-roles" data-placeholder="Choose a role...">
+						<option value=""></option>
+
+						<?php foreach ($profile_roles as $role): ?>
+						<option value="<?php echo($role->id); ?>"><?php echo($role->name) ?></option>
+						<?php endforeach; ?>
+					</select>
+		
+
+					<?php if ( ! ('' == $admin_options_tab->roles_error) ) : ?>
+						<div class="error"><?php echo($admin_options_tab->roles_error); ?></div>
+					<?php endif; ?>
+				</td>
+			</tr>
+			
 		</tbody>
 	</table>
 	<p class="submit">

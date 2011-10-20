@@ -27,12 +27,14 @@ class Guthrie_Admin_Options_Profile {
 	public $type_error = '';
 	public $description_error = '';
 	public $value_error = '';
+	public $roles_error = '';
 
 	public $name = '';
 	public $tag = '';
 	public $type = '';
 	public $description = '';
 	public $value = '';
+	public $roles = array();
 
 	public $profile_roles = array();
 
@@ -56,7 +58,7 @@ class Guthrie_Admin_Options_Profile {
 		$has_error = false;
 
 		$this->name = trim( $_POST['profile-field-add-field-name'] );
-		if( '' === $name ) {
+		if( '' === $this->name ) {
 			$this->name_error = 'Please enter the fields name.';
 			$has_error = true;
 		}
@@ -83,7 +85,18 @@ class Guthrie_Admin_Options_Profile {
 			$this->value_error = 'Please enter the value.';
 			$has_error = true;
 		}
-	
+
+		if( array_key_exists ( 'profile-field-add-roles' , $_POST ) ) {
+			$this->roles = $_POST['profile-field-add-roles'];
+			if( sizeof($this->roles) == 0 || '' == $this->roles[0] ) {
+				$this->roles_error = 'Please choose at least one role.';
+				$has_error = true;
+			}
+		}	else {
+				$this->roles_error = 'Please choose at least one role.';
+				$has_error = true;
+		}
+
 		if( true == $has_error ) {
 			$this->guthrie->status_message = "Could not add field!";
 			$this->guthrie->show_admin_messages( true );

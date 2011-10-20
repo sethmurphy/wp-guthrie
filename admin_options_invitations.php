@@ -23,15 +23,15 @@ class Guthrie_Admin_Options_Invitations {
 	private $guthrie = null;
 	private $admin_options = null;
 
-	public $profile_invite_email_error = '';
-	public $profile_invite_name_error = '';
-	public $profile_invite_description_error = '';
-	public $profile_invite_field_roles_error = '';
+	public $email_error = '';
+	public $name_error = '';
+	public $description_error = '';
+	public $roles_error = '';
 
-	public $profile_invite_email = '';
-	public $profile_invite_name = '';
-	public $profile_invite_description = '';
-	public $profile_invite_field_roles = array();
+	public $email = '';
+	public $name = '';
+	public $description = '';
+	public $roles = array();
 	
 	function factory( $guthrie = null, $admin_options = null) {
 		return new Guthrie_Admin_Options_Invitations($guthrie, $admin_options);
@@ -44,7 +44,7 @@ class Guthrie_Admin_Options_Invitations {
 	function __construct( $guthrie = null, $admin_options = null ) {
 		$this->guthrie = $guthrie;
 		$this->admin_options = $admin_options;
-		if( isset( $_POST['submitted'] ) ) {
+		if( isset( $_POST['profile-invite-submitted'] ) ) {
 			$this->do_submit();
 		}
 	}
@@ -54,60 +54,69 @@ class Guthrie_Admin_Options_Invitations {
 	}
 
 	private function generate_invitation_guid ($salt) {
-		$key = $this->profile_invite_email;
+		$key = $this->email;
 		return $this->generate_guid( $key, $salt );
 	}
 	
+	public function generate_profile_url( $guid = null ) {
+		$url = site_url() . "?page_id=" . get_option( "guthrie_default_post_id" );
+		if ( isset( $guid ) && '' != $guid ) {
+			$url .= "&" . "key=" . $guid;
+		}
+		return $url;
+	}
+
 	function do_submit() {
 		global $wpdb;
 		$has_error = false;
 
-		$this->profile_invite_email = trim( $_POST['profile-invite-email'] );
-		if( '' === $this->profile_invite_email ) {
-			$this->profile_invite_email_error = 'Please enter an email address.';
+		// validate submitted values server side
+		$this->email = trim( $_POST['profile-invite-email'] );
+		if( '' === $this->email ) {
+			$this->email_error = 'Please enter an email address.';
 			$has_error = true;
 		}
 
-		if( array_key_exists ( 'profile-invite-field-roles' , $_POST ) ) {
-			$this->profile_invite_field_roles = $_POST['profile-invite-field-roles'];
-			if( sizeof($this->profile_invite_field_roles) == 0 || '' == $this->profile_invite_field_roles[0] ) {
-				$this->profile_invite_field_roles_error = 'Please choose at least one role.';
+		if( array_key_exists ( 'profile-invite-roles' , $_POST ) ) {
+			$this->roles = $_POST['profile-invite-roles'];
+			if( sizeof($this->roles) == 0 || '' == $this->roles[0] ) {
+				$this->roles_error = 'Please choose at least one role.';
 				$has_error = true;
 			}
 		}	else {
-				$this->profile_invite_field_roles_error = 'Please choose at least one role.';
+				$this->roles_error = 'Please choose at least one role.';
 				$has_error = true;
 		}
-		$this->profile_invite_name = trim( $_POST['profile-invite-name'] );
-		$this->profile_invite_description = trim( $_POST['profile-invite-description'] );
+		$this->name = trim( $_POST['profile-invite-name'] );
+		$this->description = trim( $_POST['profile-invite-description'] );
 
-		if( true == $has_error ) {
+		if( true == $has_error ) { 
+			// we failed validation
 			$this->guthrie->status_message = "Could not send invitation!";
 			$this->guthrie->show_admin_messages( true );
-		} else {
+		} else { 
+			// good to go, get to work
 			$table_name = $wpdb->prefix . "guthrie_profile_invitation"; 
-			// id, time, email, name, description, guid
+			// insert our invitation without the unique key
 			$rows_affected = $wpdb->insert( $table_name, array( 
 			  'id' => null, 
 			  'time' => current_time( 'mysql' ), 
-			  'email' => $this->profile_invite_email, 
-			  'name' => $this->profile_invite_name, 
-			  'description' => $this->profile_invite_description, 
+			  'email' => $this->email, 
+			  'name' => $this->name, 
+			  'description' => $this->description, 
 			  'guid' => '' ) );
 
+			// generate the key using the DB id from the insert
 			$profile_invitation_id = $wpdb->get_var( "SELECT LAST_INSERT_ID();" );
-			//echo( $rows_affected );
-			//echo( $id );
 			$guid = $this->generate_invitation_guid( $profile_invitation_id );
-			$sql = "UPDATE $table_name SET guid = '$guid' where id=$profile_invitation_id;";
-			//echo( $sql );
+			$sql = $wpdb->prepare( "UPDATE $table_name SET guid = %s where id = %d;", $guid, $profile_invitation_id );
 			$wpdb->query( $sql );
 
+			// associate the roles for the invitation
 			$table_name = $wpdb->prefix . "guthrie_profile_invitation_role"; 
 			// loop through out roles
-			for($i=0; $i < sizeof( $this->profile_invite_field_roles ); $i++ ) {
-				// id, profile_role_id,  profile_invitation_id
-				$role_id = $this->profile_invite_field_roles[$i];
+			for($i=0; $i < sizeof( $this->roles ); $i++ ) {
+				$role_id = $this->roles[$i];
 				$rows_affected = $wpdb->insert( $table_name, array( 
 				  'time' => current_time( 'mysql' ), 
 				  'id' => null, 
@@ -116,22 +125,25 @@ class Guthrie_Admin_Options_Invitations {
 				);
 			}
 			
-			$url = site_url() . "?page_id=" . get_option( "guthrie_default_post_id" ) . "&" . "key=" . $guid;
+			// construct and send the invitation email
+			$url = $this->generate_profile_url( $guid );
 			$admin_email = get_option('admin_email');
-			$email_to = $this->profile_invite_email;
+			$email_to = $this->email;
 			$subject = 'Guthrie Profile Invitation';
 			$body = "Hello, \n\n$url\n\nKeep in touch!\n";
-			$headers = 'From: Guthrie <' . $admin_email . '>' . "\r\n" . 'Reply-To: ' . $admin_email;	
+			$headers = 'From: Guthrie <' . $admin_email . '>' . "\r\n" . 'Reply-To: ' . $admin_email;				
 			mail($email_to, $subject, $body, $headers);
 			$email_sent = true;
 
+			// set our success message for the user
 			$this->guthrie->status_message = "Sent Invitation!";
 			$this->guthrie->show_admin_messages( false );
 	
-			$this->profile_invite_email = '';
-			$this->profile_invite_name = '';
-			$this->profile_invite_description = '';
-			$this->profile_invite_field_roles = '';
+			// clear our submitted values on success so they are not used to re-populate the form
+			$this->email = '';
+			$this->name = '';
+			$this->description = '';
+			$this->roles = '';
 		}
 	} 
 }

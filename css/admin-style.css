@@ -25,18 +25,20 @@
 	background-color: #F3F3F3;
 }
 .draggable-vertical {
-	width: 32px;
+	width: 24px;
 	height: 24px;
 	display: block;
 	float: left;
 }
 .profile-field-instance:hover .draggable-vertical,
 .draggable-field-instance-helper  .draggable-vertical {
-	background: url(drag-n-drop.png) no-repeat top left;
+	background: url(drag-n-drop.png) no-repeat center;
 	cursor: move;
 }
 
-.profile-field-instance:hover {
+.profile-field-instance:hover,
+.profile-role:hover,
+.profile-invitation:hover {
 	background-color: #F6F6F6;
 }
 
@@ -51,7 +53,11 @@
 }
 .profile-field {
 	width: 300px;
-	line-height: 2.25em;
+}
+.profile-field,
+.profile-role-description,
+.profile-role-name {
+	height: 2.25em;
 }
 #profile-fields td label,
 #draggable-field-instance-helper td label{
@@ -65,3 +71,31 @@
 .field-type-select {
 	width: 25em;
 }
+
+
+
+
+.delete {
+	width: 24px;
+	height: 24px;
+}
+.profile-field-instance:hover .delete,
+.profile-role:hover .delete,
+.profile-invitation:hover .delete {
+	background: url(delete_16x16.gif) no-repeat center;
+	cursor: pointer;
+}
+
+#profile-fields th,
+#profile-invitations th,
+#profile-roles th {
+	text-align: left;
+}
+
+th .instructions {
+	color: red; 
+}
+.profile-role-name {
+	width: 300px;
+}
+

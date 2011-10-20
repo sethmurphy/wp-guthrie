@@ -81,7 +81,3 @@ class Guthrie_Admin_Options_Roles {
 		}
 	} 
 }
-?>
-
-
-

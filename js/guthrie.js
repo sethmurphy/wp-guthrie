@@ -1,3 +1,23 @@
+/*
+Author: Seth Murphy
+Author URI: http://sethmurphy.com
+License: GPL2
+Copyright 2011	Seth Murphy	(email : seth@sethmurphy.com)
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License, version 2, AS 
+published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA	02110-1301	USA
+*/
+
 document.draggableFieldInstance = function( event ) {
 	var parent = $( this ).parent();
 	//var html = parent.attr('outerHTML');
@@ -42,7 +62,7 @@ document.handleDroppableFieldInstance = function( event, ui ) {
 				// success, move our rows
 				var dragged_from_index = oResponse.original_field_instance_index;
 				var dropped_on_index = oResponse.field_instance_index;
-				var profile_field_instances = $( '#profile-field-instances' );
+				var profile_field_instances = $( '#profile-fields tbody' );
 				var dragged_item = profile_field_instances.children().eq( dragged_from_index );
 				var html = $('<div>').append(dragged_item.clone()).html();
 				var dropped_item = profile_field_instances.children().eq( dropped_on_index );
@@ -67,10 +87,10 @@ document.handleDroppableFieldInstance = function( event, ui ) {
 
 				// make sure we are stilled wired to our events
 				$( ".draggable-field-handle" ).draggable( { 
-					containment: $( '#profile-field-instances' ),
-					snap: $( '.profile-field-instance' ),
+					containment: $( '#profile-fields tbody' ),
+					snap: $( '.profile-fields tbody' ),
 					helper: document.draggableFieldInstance,
-					stack: $( '#profile-field-instances' )
+					stack: $( '#profile-fields tbody' )
 					} );
 			
 				$( ".field-instance-container" ).droppable( { 
@@ -96,6 +116,7 @@ document.handleDroppableFieldInstance = function( event, ui ) {
 };
 
 $( document ).ready( function() {
+	// for our "edit in place" table cells	
 	$( "#profile-fields .chzn-select" ).chosen( { no_results_text: 'No results matched.' } ).change( document.updateFieldRoles );
 	$( ".invitation-roles" ).chosen( { no_results_text: 'No results matched.' } ).change( document.updateInvitationRoles );
 	
@@ -163,7 +184,7 @@ $( document ).ready( function() {
 
 
 	$( ".draggable-field-handle" ).draggable( { 
-		containment: $( '#profile-field-instances' ),
+		containment: $( '#profile-fields tbody' ),
 		snap: $( '.profile-field-instance' ),
 		helper: document.draggableFieldInstance,
 		} );
@@ -172,6 +193,42 @@ $( document ).ready( function() {
 		drop: document.handleDroppableFieldInstance,
 		} );
 
-	$( "#profileInviteForm .chzn-select" ).chosen( { no_results_text: 'No results matched.' } );
+	// for our "add" forms	
+	$( "profile-invite-roles" ).chosen( { no_results_text: 'No results matched.' } );
+	$( "profile-field-add-roles" ).chosen( { no_results_text: 'No results matched.' } );
 
+	$('#profile-invitations tbody .delete').click(function(element){
+		if( confirm( 'Delete invitation?' ) ) {
+			var $this = $(element.target);
+			var invitation_id = $this.attr("id").split("_")[1];
+			var element_id = $this.attr("id");
+
+			var data = "action=guthrie_remove_profile_invitation" + 
+					       "&invitation_id=" + field_id + 
+					       "&element_id=" + element_id;
+			$.ajax({
+				type: "POST",
+				url: ajaxurl,
+				data: data,
+				dataType: "json",
+				complete: function( response ){
+					// do nothing for now
+					alert("removed!");
+				}
+			});
+
+		}
+	
+		
+
+		return answer // answer is a boolean
+	}); 
+	$('#profile-fields tbody .delete').click(function(){
+		var answer = confirm('Delete field');
+		return answer // answer is a boolean
+	}); 
+	$('#profile-roles tbody .delete').click(function(){
+		var answer = confirm('Delete role');
+		return answer // answer is a boolean
+	}); 
 });

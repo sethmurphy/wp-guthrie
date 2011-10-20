@@ -1,9 +1,28 @@
 <?php
 /*
+Author: Seth Murphy
+Author URI: http://sethmurphy.com
+License: GPL2
+Copyright 2011	Seth Murphy	(email : seth@sethmurphy.com)
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License, version 2, AS 
+published by the Free Software Foundation.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA	02110-1301	USA
+*/
+
+/*
 Manage our roles
 */
-?>
-<?php 
+
 global $guthrie;
 global $admin_options;
 
@@ -11,40 +30,30 @@ $profile_roles = $guthrie->get_profile_roles();
 $admin_options_tab = $admin_options->admin_options_tab;
 ?>
 <h3 class="manage-roles">Manage Roles</h3>
-<?php
-/*
-Manage our profile
-*/
-?>
-<?php 
-global $guthrie;
-global $admin_options;
-
-$profile_roles = $guthrie->get_profile_roles();
-$admin_options_tab = $admin_options->admin_options_tab;
-?>
 <table id="profile-roles">
 	<thead>
 		<tr>
 			<th />
 			<th>Name <span class="instructions">(click to edit in place)</span></th>
 			<th>Description <span class="instructions">(click to edit in place)</span></th>
+			<th />
 		</tr>
 	</thead>
-	<tbody id="profile-roles">
+	<tbody>
 	<?php $i=0; ?>
 	<?php foreach ($profile_roles as $role): ?>
 		<tr class="profile-role" id="role_<?php echo($role->id); ?>" tabindex="<?php echo( $i ) ?>" >
 			<td valign="top" class="draggable-vertical draggable-field-handle">&nbsp;</td>
 			<td valign="top"><div id="name_<?php echo($role->id); ?>" name="name_<?php echo($role->id); ?>" class="profile-role-name"><?php echo($role->name); ?></div></td>
 			<td valign="top"><div id="description_<?php echo($role->name); ?>" name="description_<?php echo($role->id); ?>" class="profile-role-description"><?php echo($role->description); ?></div></td>
+			<td valign="top" class="delete">&nbsp;</td>
 		</tr>
 	<?php endforeach; ?>
 	</tbody>
 </table>
 
 <form action="<?php the_permalink(); ?>" id="roleAddForm" method="post">
-	<h2 class="add-a-field">Add a Role</h2>
+	<h3 class="add-a-field">Add a Role</h3>
 	<input type="hidden" value="submitted" name="submitted" />
 	<table class="form-table">
 		<tbody>
@@ -78,4 +87,3 @@ $admin_options_tab = $admin_options->admin_options_tab;
 		<button class="button-primary" id="field-instance-add-button" type="submit">Add Field</button>
 	</p>
 </form>
-
