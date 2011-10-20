@@ -3,7 +3,7 @@
 Plugin Name: Guthrie
 Plugin URI: http://guthrie.sethmurphy.com
 Description: A place to share your identity with those you know.
-Version: 1.0
+Version: 0.8
 Author: Seth Murphy
 Author URI: http://sethmurphy.com
 License: GPL2

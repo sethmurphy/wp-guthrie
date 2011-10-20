@@ -21,4 +21,12 @@ Be the author of your identity! Guthrie allows you to create and manage an onlin
    OR
    Navigate to the default profile or 'My Guthrie' page: [site-url]/?name=my-guthrie or [site-url]/my-guthrie
 
+== Frequently Asked Questions ==
+
+== Changelog ==
+
+== Upgrade Notice ==
+
+== Screenshots ==
+
 For more details on this plugin and it's usage visit http://guthrie.sethmurphy.com
