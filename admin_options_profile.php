@@ -102,7 +102,6 @@ class Guthrie_Admin_Options_Profile {
 			$this->guthrie->show_admin_messages( true );
 		} else {
 			$table_name = $wpdb->prefix . "guthrie_profile_field"; 
-			// id, profile_field_type_id, time, tag,name, description, sequence
 			$rows_affected = $wpdb->insert( $table_name, array( 
 				'time' => current_time( 'mysql' ), 
 				'id' => null, 
@@ -114,11 +113,8 @@ class Guthrie_Admin_Options_Profile {
 			);
 			
 			$profile_field_id = $wpdb->get_var( "SELECT LAST_INSERT_ID();" );
-			//echo( $rows_affected );
-			//echo( $id );
 			
 			$table_name = $wpdb->prefix . "guthrie_profile_field_instance"; 
-			// id, profile_field_id, value
 			$rows_affected = $wpdb->insert( $table_name, array( 
 				'time' => current_time( 'mysql' ), 
 				'id' => null, 
@@ -126,6 +122,19 @@ class Guthrie_Admin_Options_Profile {
 				'value' => $this->value, 
 				'sequence' => 99999 ) 
 			);
+
+			// associate the roles for the field
+			$table_name = $wpdb->prefix . "guthrie_profile_field_role"; 
+			// loop through out roles
+			for($i=0; $i < sizeof( $this->roles ); $i++ ) {
+				$role_id = $this->roles[ $i ];
+				$rows_affected = $wpdb->insert( $table_name, array( 
+				  'time' => current_time( 'mysql' ), 
+				  'id' => null, 
+				  'profile_field_id' => $profile_field_id, 
+				  'profile_role_id' => $role_id ) 
+				);
+			}
 
 			$this->guthrie->status_message = "Added field!";
 			$this->guthrie->show_admin_messages( false );
@@ -139,5 +148,3 @@ class Guthrie_Admin_Options_Profile {
 	} 
 }
 ?>
-
-

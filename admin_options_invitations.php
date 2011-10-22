@@ -116,7 +116,7 @@ class Guthrie_Admin_Options_Invitations {
 			$table_name = $wpdb->prefix . "guthrie_profile_invitation_role"; 
 			// loop through out roles
 			for($i=0; $i < sizeof( $this->roles ); $i++ ) {
-				$role_id = $this->roles[$i];
+				$role_id = $this->roles[ $i ];
 				$rows_affected = $wpdb->insert( $table_name, array( 
 				  'time' => current_time( 'mysql' ), 
 				  'id' => null, 
