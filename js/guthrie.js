@@ -225,10 +225,12 @@ $( document ).ready( function() {
 		if( confirm( 'Delete field?' ) ) {
 			var $this = $(element.target);
 			var profile_field_instance_id = $this.attr("id").split("_")[1];
+			var profile_field_id = $this.attr("id").split("_")[2];
 			var element_id = $this.attr("id");
 
 			var data = "action=guthrie_remove_profile_field_instance" + 
 					       "&profile_field_instance_id=" + profile_field_instance_id + 
+					       "&profile_field_id=" + profile_field_id + 
 					       "&element_id=" + element_id;
 			$.ajax({
 				type: "POST",

@@ -64,7 +64,7 @@ $admin_options_tab = $admin_options->admin_options_tab;
 					<?php endforeach; ?>
 				</select>
 			</td>
-			<td valign="top" class="delete"><?php echo( $guthrie->delete_button( 'delete-profile-field_' . $field->id ) ); ?></td>
+			<td valign="top" class="delete"><?php echo( $guthrie->delete_button( 'delete-profile-field_' . $field->profile_field_instance_id . '_' . $field->id) ); ?></td>
 		</tr>
 	<?php endforeach; ?>
 	</tbody>

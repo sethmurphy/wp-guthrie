@@ -309,8 +309,15 @@ class Guthrie_Ajax {
 
 		if( array_key_exists ( 'profile_field_instance_id' , $_POST ) ) {
 			$profile_field_instance_id = $_POST[ 'profile_field_instance_id' ];
+
+			// remove our field instances	
 			$table_name = $wpdb->prefix . "guthrie_profile_field_instance";
 			$sql = $wpdp->prepare( "DELETE FROM $table_name WHERE id = %d", $profile_field_instance_id );
+			$wpdb->query( $sql );
+			
+			// remove our field
+			$table_name = $wpdb->prefix . "guthrie_profile_field";
+			$sql = $wpdp->prepare( "DELETE FROM $table_name WHERE id = %d", $profile_field_id );
 			$wpdb->query( $sql );
 			$success = true;
 		}
@@ -337,6 +344,13 @@ class Guthrie_Ajax {
 
 		if( array_key_exists ( 'profile_invitation_id' , $_POST ) ) {
 			$profile_invitation_id = $_POST[ 'profile_invitation_id' ];
+
+			// delete our invitations roles
+			$table_name = $wpdb->prefix . "guthrie_profile_invitation_role";
+			$sql = $wpdb->prepare( "DELETE FROM $table_name WHERE profile_invitation_id = %d", $profile_invitation_id );
+			$wpdb->query( $sql );
+
+			// delete the invitation
 			$table_name = $wpdb->prefix . "guthrie_profile_invitation";
 			$sql = $wpdb->prepare( "DELETE FROM $table_name WHERE id = %d", $profile_invitation_id );
 			$wpdb->query( $sql );
@@ -365,6 +379,19 @@ class Guthrie_Ajax {
 
 		if( array_key_exists ( 'profile_role_id' , $_POST ) ) {
 			$profile_role_id = $_POST[ 'profile_role_id' ];
+
+
+			// delete any invitation role relationships
+			$table_name = $wpdb->prefix . "guthrie_profile_invitation_role";
+			$sql = $wpdb->prepare( "DELETE FROM $table_name WHERE profile_role_id = %d", $profile_role_id );
+			$wpdb->query( $sql );
+
+			// delete any field role relationships
+			$table_name = $wpdb->prefix . "guthrie_profile_field_role";
+			$sql = $wpdb->prepare( "DELETE FROM $table_name WHERE profile_role_id = %d", $profile_role_id );
+			$wpdb->query( $sql );
+
+
 			$table_name = $wpdb->prefix . "guthrie_profile_role";
 			$sql = $wpdb->prepare( "DELETE FROM $table_name WHERE id = %d", $profile_role_id );
 			$wpdb->query( $sql );
