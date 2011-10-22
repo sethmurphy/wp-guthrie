@@ -60,35 +60,25 @@ class Guthrie_Ajax {
 					if( $field_instance_id == $field_instance->id ) {
 						if ( $original_field_instance_id > $field_instance_index ) {
 							// place before
-							$sql = "UPDATE " . $table_name . " SET `sequence` = '$sequence' WHERE id = $original_field_instance_id";
-							//echo($sql);
-							//echo("\n");
+							$sql = $wpdb->prepare( "UPDATE $table_name SET `sequence` = %s WHERE id = %d", $sequence, $original_field_instance_id );
 							$wpdb->query( $sql );
 							$sequence = $sequence + 10;
 
-							$sql = "UPDATE " . $table_name . " SET `sequence` = '$sequence' WHERE id = $field_instance_id";
-							//echo($sql);
-							//echo("\n");
+							$sql = $wpdb->prepare( "UPDATE $table_name SET `sequence` = %s WHERE id = %d", $sequence, $field_instance_id );
 							$wpdb->query( $sql );
 						} else {
 							// place after
-							$sql = "UPDATE " . $table_name . " SET `sequence` = '$sequence' WHERE id = $field_instance_id";
-							//echo($sql);
-							//echo("\n");
+							$sql = $wpdb->prepare( "UPDATE $table_name SET `sequence` = %s WHERE id = %d", $sequence, $field_instance_id );
 							$wpdb->query( $sql );
 							$sequence = $sequence + 10;
 	
-							$sql = "UPDATE " . $table_name . " SET `sequence` = '$sequence' WHERE id = $original_field_instance_id";
-							//echo($sql);
-							//echo("\n");
+							$sql = $wpdb->prepare( "UPDATE $table_name SET `sequence` = %s WHERE id = %d", $sequence, $original_field_instance_id );
 							$wpdb->query( $sql );
 						}						
 						$success = true;
 						$sequence = $sequence + 10;
 					} else {
-						$sql = "UPDATE " . $table_name . " SET `sequence` = '$sequence' WHERE id = $field_instance->id";
-						//echo($sql);
-						//echo("\n");
+						$sql = $wpdb->prepare( "UPDATE $table_name SET `sequence` = %s WHERE id = %d", $sequence, $field_instance->id );
 						$wpdb->query( $sql );
 						$success = true;
 						$sequence = $sequence + 10;
@@ -129,8 +119,7 @@ class Guthrie_Ajax {
 			$field_instance_id = $_POST[ 'field_instance_id' ];
 			$original_value = $_POST[ 'original_value' ];
 			$table_name = $wpdb->prefix . "guthrie_profile_field_instance";
-			$sql = "UPDATE " . $table_name . " SET `value` = '$value' WHERE id = $field_instance_id";
-			//echo($sql);
+			$sql = $wpdb->prepare( "UPDATE $table_name SET `value` = %s WHERE id = %d", $value, $field_instance_id );
 			$wpdb->query( $sql );
 			$success = true;
 		}
@@ -161,9 +150,9 @@ class Guthrie_Ajax {
 			$element_id = $_POST[ 'element_id' ];
 			
 			// get the existing field_roles from the database
-			$sql = "SELECT id as profile_field_role_id, profile_field_id, profile_role_id " .
-			       "FROM " . $wpdb->prefix . "guthrie_profile_field_role AS fr " .
-			       "where fr.profile_field_id=" . $field_id . ";";
+			$sql = $wpdb->prepare( "SELECT id as profile_field_role_id, profile_field_id, profile_role_id " .
+			                       "FROM " . $wpdb->prefix . "guthrie_profile_field_role AS fr " .
+			                       "WHERE fr.profile_field_id=%d", $field_id );
 			
 			$profilefieldroles = $wpdb->get_results($sql, OBJECT);
 			
@@ -182,7 +171,7 @@ class Guthrie_Ajax {
 					// remove our record if neccessary
 					if( !$exists ) {
 						$table_name = $wpdb->prefix . "guthrie_profile_field_role";
-						$sql = "DELETE FROM " . $table_name . " WHERE id = $profilefieldrole->profile_field_role_id;";
+						$sql = $wpdb->prepare( "DELETE FROM $table_name WHERE id = %d", $profilefieldrole->profile_field_role_id );
 						$wpdb->query( $sql );
 						$success = true;
 					}
@@ -213,7 +202,7 @@ class Guthrie_Ajax {
 			if( array_key_exists ( 'field_id' , $_POST ) ) {
 				$field_id = $_POST['field_id'];
 				$table_name = $wpdb->prefix . "guthrie_profile_field_role";
-				$sql = "DELETE FROM " . $table_name . " WHERE profile_field_id = $field_id;";
+				$sql = $wpdb->prepare( "DELETE FROM $table_name WHERE profile_field_id = %d", $field_id );
 				$wpdb->query( $sql );
 				$success = true;
 			}
@@ -240,9 +229,9 @@ class Guthrie_Ajax {
 			$element_id = $_POST[ 'element_id' ];
 			
 			// get the existing invitation_roles from the database
-			$sql = "SELECT id as profile_invitation_role_id, profile_invitation_id, profile_role_id " .
-			       "FROM " . $wpdb->prefix . "guthrie_profile_invitation_role AS ir " .
-			       "where ir.profile_invitation_id=" . $invitation_id . ";";
+			$sql = $wpdb->prepare( "SELECT id as profile_invitation_role_id, profile_invitation_id, profile_role_id " .
+			                       "FROM " . $wpdb->prefix . "guthrie_profile_invitation_role AS ir " .
+			                       "WHERE ir.profile_invitation_id=%d", $invitation_id );
 			
 			$profileinvitationroles = $wpdb->get_results($sql, OBJECT);
 			
@@ -261,7 +250,7 @@ class Guthrie_Ajax {
 					// remove our record if neccessary
 					if( !$exists ) {
 						$table_name = $wpdb->prefix . "guthrie_profile_invitation_role";
-						$sql = "DELETE FROM " . $table_name . " WHERE id = $profileinvitationrole->profile_invitation_role_id;";
+						$sql = $wpdb->prepare( "DELETE FROM $table_name WHERE id = %d", $profileinvitationrole->profile_invitation_role_id );
 						$wpdb->query( $sql );
 						$success = true;
 					}
@@ -292,7 +281,7 @@ class Guthrie_Ajax {
 			if( array_key_exists ( 'field_id' , $_POST ) ) {
 				$field_id = $_POST['field_id'];
 				$table_name = $wpdb->prefix . "guthrie_profile_invitation_role";
-				$sql = "DELETE FROM " . $table_name . " WHERE profile_invitation_id = $invitation_id;";
+				$sql = $wpdb->prepare( "DELETE FROM $table_name WHERE profile_invitation_id = %d", $invitation_id );
 				$wpdb->query( $sql );
 				$success = true;
 			}
@@ -318,11 +307,10 @@ class Guthrie_Ajax {
 			$element_id = $_POST[ 'element_id' ];
 		}
 
-		if( array_key_exists ( 'field_instance_id' , $_POST ) ) {
-			$field_instance_id = $_POST[ 'field_instance_id' ];
+		if( array_key_exists ( 'profile_field_instance_id' , $_POST ) ) {
+			$profile_field_instance_id = $_POST[ 'profile_field_instance_id' ];
 			$table_name = $wpdb->prefix . "guthrie_profile_field_instance";
-			$sql = $wpdp->prepare( "DELETE FROM $table_name WHERE id = %d", $field_instance_id );
-			//echo($sql);
+			$sql = $wpdp->prepare( "DELETE FROM $table_name WHERE id = %d", $profile_field_instance_id );
 			$wpdb->query( $sql );
 			$success = true;
 		}
@@ -354,7 +342,7 @@ class Guthrie_Ajax {
 			$wpdb->query( $sql );
 			$success = true;
 		}
-		$response = json_encode( array( 'remove_invitation_success' => $success,
+		$response = json_encode( array( 'remove_profile_invitation_success' => $success,
 		                                'element_id'=> $element_id ) );
 
 		// response output
@@ -411,8 +399,7 @@ class Guthrie_Ajax {
 			$role_id = $_POST[ 'role_id' ];
 			$original_value = $_POST[ 'original_value' ];
 			$table_name = $wpdb->prefix . "guthrie_profile_role";
-			$sql = "UPDATE " . $table_name . " SET `name` = '$name' WHERE id = $role_id";
-			//echo($sql);
+			$sql = $wpdb->prepare( "UPDATE $table_name SET `name` = %s WHERE id = %d", $name, $role_id );
 			$wpdb->query( $sql );
 			$success = true;
 		}
@@ -450,8 +437,7 @@ class Guthrie_Ajax {
 			$role_id = $_POST[ 'role_id' ];
 			$original_value = $_POST[ 'original_value' ];
 			$table_name = $wpdb->prefix . "guthrie_profile_role";
-			$sql = "UPDATE " . $table_name . " SET `description` = '$description' WHERE id = $role_id";
-			//echo($sql);
+			$sql = $wpdb->prepare( "UPDATE $table_name SET `description` = %s WHERE id = %d", $description, $role_id );
 			$wpdb->query( $sql );
 			$success = true;
 		}
@@ -489,8 +475,7 @@ class Guthrie_Ajax {
 			$invitation_id = $_POST[ 'invitation_id' ];
 			$original_value = $_POST[ 'original_value' ];
 			$table_name = $wpdb->prefix . "guthrie_profile_invitation";
-			$sql = "UPDATE " . $table_name . " SET `name` = '$name' WHERE id = $invitation_id";
-			//echo($sql);
+			$sql = $wpdb( "UPDATE $table_name SET `name` = %s WHERE id = %d", $name, $invitation_id );
 			$wpdb->query( $sql );
 			$success = true;
 		}
@@ -528,8 +513,7 @@ class Guthrie_Ajax {
 			$invitation_id = $_POST[ 'invitation_id' ];
 			$original_value = $_POST[ 'original_value' ];
 			$table_name = $wpdb->prefix . "guthrie_profile_invitation";
-			$sql = "UPDATE " . $table_name . " SET `description` = '$description' WHERE id = $invitation_id";
-			//echo($sql);
+			$sql = $wpdb( "UPDATE $table_name SET `description` = %s WHERE id = %d", $description, $invitation_id );
 			$wpdb->query( $sql );
 			$success = true;
 		}
