@@ -202,48 +202,34 @@ class Guthrie_Install {
 		 $DEFAULT_PROFILE_FIELDS = array( // id, tag, name, description, profile_field_type_id, sequence
 																array(1,"name", "Name", "Your full name.", 1, 10),
 																array(2,"byline", "Byline", "Your public byline.", 1, 20),
-																array(3,"byline", "Byline", "Your Hacker School byline.", 1, 20),
-																array(4,"email", "Email", "Your public email address.", 1, 20),
-																array(5,"email", "Email", "Your Hacker School email address.", 1, 20),
-																array(6,"bio", "Bio", "bio", "Your public profile introduction.", 2, 30),
-																array(7,"bio", "Bio", "Your Hacker School profile introduction.", 2, 30),
+																array(3,"email", "Email", "Your public email address.", 1, 20),
+																array(4,"bio", "Bio", "bio", "Your public profile introduction.", 2, 30),
 															 );
 	
 		 $DEFAULT_PROFILE_ROLES = array( // id, name, description, sequence
 																array(1, "Public", "Available to everyone without an invitation.", 1),
-																array(2, "Hacker School", "Available for Hacker School participants through each classmate's unique URL they received with their invitation.", 4),
 															);
 	
 		 $DEFAULT_PROFILE_FIELD_ROLES = array( // id, profile_field_id, profile_role_id
 																array(1, 1, 1),
 																array(2, 2, 1),
-																array(3, 4, 1),
-																array(4, 6, 1),
-	
-																array(5, 1, 2),
-																array(6, 3, 2),
-																array(7, 5, 2),
-																array(8, 7, 2),
+																array(3, 3, 1),
+																array(4, 4, 1),
 															);
 	
 		 $DEFAULT_PROFILE_FIELD_INSTANCES = array( // id, profile_field_id, value, sequence
 																array(1, 1, "Full Name", 10),
 																array(2, 2, "My public byline ...", 20),
-																array(3, 3, "My hackerschoolbyline ...", 30),
-																array(4, 4, "public@me.com", 40 ),
-																array(5, 5, "hackerschool@me.com", 50 ),
-																array(6, 6, "My public profile ...", 60),
-																array(7, 7, "My hacker school profile ...", 70)
+																array(3, 3, "public@me.com", 40 ),
+																array(4, 4, "My public profile ...", 60),
 															 );
 	
 		 $DEFAULT_PROFILE_INVITATIONS = array(// id, name, description, email, guid
-																array(1, "anonymous", "A family member.", "bob@email.com", "1" ),
-																array(2, "george", "A Hacker", "george@email.com", "2" ),
+																array(1, "anonymous", "anybody", "anonymous@mail.com", "1" ),
 															 );
 	
 		 $DEFAULT_PROFILE_INVITATION_ROLES = array( // id, profile_invitation_id, profile_role_id
 																array(1, 1, 1),
-																array(2, 2, 2),
 															);
 	
 		for ( $i = 0; $i < sizeof( $DEFAULT_PROFILE_FIELD_TYPES ); $i++) {

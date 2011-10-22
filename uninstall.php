@@ -19,12 +19,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA	02110-1301	USA
 */
 
-if ! ( isset( WP_UNINSTALL_PLUGIN ) ) {
-	exit; // do not call directly
-}
+//if( ! isset( WP_UNINSTALL_PLUGIN ) ) {
+//	exit; // do not call directly
+//}
 
 // just remove our database tables
 // everything else should have been done on deactivation
-require ( 'guthrie_install.php' );
+require( 'guthrie_install.php' );
 $guthrie_install = new Guthrie_Install();
 $guthrie_install->remove_database();
