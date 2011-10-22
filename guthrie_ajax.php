@@ -41,12 +41,12 @@ class Guthrie_Ajax {
 
 		if( array_key_exists ( 'original_field_instance_id' , $_POST ) &&
 		    array_key_exists ( 'original_field_instance_index' , $_POST ) &&
-		    array_key_exists ( 'field_instance_id' , $_POST ) &&
+		    array_key_exists ( 'field_id_name' , $_POST ) &&
 		    array_key_exists ( 'field_instance_index' , $_POST )) {
 
 			$original_field_instance_id = $_POST[ 'original_field_instance_id' ];
 			$original_field_instance_index = $_POST[ 'original_field_instance_index' ];
-			$field_instance_id = $_POST[ 'field_instance_id' ];
+			$field_instance_id = $_POST[ 'field_id_name' ];
 			$field_instance_index = $_POST[ 'field_instance_index' ];
 
 			$table_name = $wpdb->prefix . "guthrie_profile_field_instance";
@@ -314,9 +314,10 @@ class Guthrie_Ajax {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 		$element_id = '';
-		$value = '';
-		$field_instance_id = '';
-		$original_value = '';
+		if( array_key_exists ( 'element_id' , $_POST ) ) {
+			$element_id = $_POST[ 'element_id' ];
+		}
+
 		if( array_key_exists ( 'field_instance_id' , $_POST ) ) {
 			$field_instance_id = $_POST[ 'field_instance_id' ];
 			$table_name = $wpdb->prefix . "guthrie_profile_field_instance";
@@ -325,7 +326,8 @@ class Guthrie_Ajax {
 			$wpdb->query( $sql );
 			$success = true;
 		}
-		$response = json_encode( array( 'remove_profile_field_instance_success' => $success ) );
+		$response = json_encode( array( 'remove_profile_field_instance_success' => $success,
+		                                'element_id'=> $element_id ) );
 
 		// response output
 		header( "Content-Type: application/json" );
@@ -341,9 +343,10 @@ class Guthrie_Ajax {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 		$element_id = '';
-		$value = '';
-		$profile_invitation = '';
-		$original_value = '';
+		if( array_key_exists ( 'element_id' , $_POST ) ) {
+			$element_id = $_POST[ 'element_id' ];
+		}
+
 		if( array_key_exists ( 'profile_invitation_id' , $_POST ) ) {
 			$profile_invitation_id = $_POST[ 'profile_invitation_id' ];
 			$table_name = $wpdb->prefix . "guthrie_profile_invitation";
@@ -351,7 +354,8 @@ class Guthrie_Ajax {
 			$wpdb->query( $sql );
 			$success = true;
 		}
-		$response = json_encode( array( 'remove_invitation_success' => $success ) );
+		$response = json_encode( array( 'remove_invitation_success' => $success,
+		                                'element_id'=> $element_id ) );
 
 		// response output
 		header( "Content-Type: application/json" );
@@ -367,17 +371,19 @@ class Guthrie_Ajax {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 		$element_id = '';
-		$value = '';
-		$profile_invitation = '';
-		$original_value = '';
+		if( array_key_exists ( 'element_id' , $_POST ) ) {
+			$element_id = $_POST[ 'element_id' ];
+		}
+
 		if( array_key_exists ( 'profile_role_id' , $_POST ) ) {
 			$profile_role_id = $_POST[ 'profile_role_id' ];
 			$table_name = $wpdb->prefix . "guthrie_profile_role";
-			$sql = $wpdb->prepare( "DELETE FROM $table_name WHERE id = %d", $profile_invitation_id );
+			$sql = $wpdb->prepare( "DELETE FROM $table_name WHERE id = %d", $profile_role_id );
 			$wpdb->query( $sql );
 			$success = true;
 		}
-		$response = json_encode( array( 'remove_invitation_success' => $success ) );
+		$response = json_encode( array( 'remove_profile_role_success' => $success,
+		                                'element_id'=> $element_id ) );
 
 		// response output
 		header( "Content-Type: application/json" );

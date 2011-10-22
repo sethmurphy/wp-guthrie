@@ -43,10 +43,10 @@ $admin_options_tab = $admin_options->admin_options_tab;
 	<?php $i=0; ?>
 	<?php foreach ($profile_roles as $role): ?>
 		<tr class="profile-role" id="role_<?php echo($role->id); ?>" tabindex="<?php echo( $i ) ?>" >
-			<td valign="top" class="draggable-vertical draggable-field-handle">&nbsp;</td>
-			<td valign="top"><div id="name_<?php echo($role->id); ?>" name="name_<?php echo($role->id); ?>" class="profile-role-name"><?php echo($role->name); ?></div></td>
-			<td valign="top"><div id="description_<?php echo($role->name); ?>" name="description_<?php echo($role->id); ?>" class="profile-role-description"><?php echo($role->description); ?></div></td>
-			<td valign="top" class="delete">&nbsp;</td>
+			<td valign="top" class="preview"><a href="<?php echo( $admin_options_tab->generate_profile_url( $role->id ) ); ?>"><?php echo( $guthrie->preview_button() ); ?></a></td>
+			<td valign="top"><div tabindex="1" id="name_<?php echo($role->id); ?>" name="name_<?php echo($role->id); ?>" class="cell-content-wrapper profile-role-name"><?php echo($role->name); ?></div></td>
+			<td valign="top"><div tabindex="1" id="description_<?php echo($role->name); ?>" name="description_<?php echo($role->id); ?>" class="cell-content-wrapper profile-role-description"><?php echo($role->description); ?></div></td>
+			<td valign="top" class="delete"><?php echo( $guthrie->delete_button( 'delete-profile-role_' . $role->id ) ); ?></td>
 		</tr>
 	<?php endforeach; ?>
 	</tbody>

@@ -24,7 +24,7 @@
 					 // If the plugin hasn't been initialized yet
 					 if ( ! data ) {
 							$this.data("settings",settings);
-							$this.bind('click.fieldEvents', methods.setup_control);
+							$this.bind('focus.fieldEvents', methods.setup_control);
 							$this.addClass("edit-in-place");
 
 							var field_value = $this.html();
@@ -53,7 +53,7 @@
 				while($this.data("settings") == null){
 					$this = $this.parent();
 				}
-				$this.unbind('click.fieldEvents');
+				$this.unbind('focus.fieldEvents');
 
 				
 				var settings = $this.data("settings");
@@ -128,7 +128,7 @@
 
 				$this.css("z-index",1);
 				event.stopPropagation();
-				$this.bind('click.fieldEvents', methods.setup_control);
+				$this.bind('focus.fieldEvents', methods.setup_control);
 
 			},
 

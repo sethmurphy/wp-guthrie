@@ -47,6 +47,14 @@ class Guthrie_Admin_Options_Roles {
 		}
 	}
 
+	public function generate_profile_url( $role_id ) {
+		$url = site_url() . "?page_id=" . get_option( "guthrie_default_post_id" );
+		if ( isset( $role_id ) && '' != $role_id ) {
+			$url .= "&" . "role_id=" . $role_id;
+		}
+		return $url;
+	}
+
 	function do_submit() {
 		global $wpdb;
 		$has_error = false;

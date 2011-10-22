@@ -38,7 +38,6 @@ $admin_options_tab = $admin_options->admin_options_tab;
 			<th>Name <span class="instructions">(click to edit in place)</span></th>
 			<th>Description <span class="instructions">(click to edit in place)</span></th>
 			<th>Relationships</th>
-			<th>Profile Link</th>
 			<th />
 		</tr>
 	</thead>
@@ -46,10 +45,10 @@ $admin_options_tab = $admin_options->admin_options_tab;
 	<?php $i=0; ?>
 	<?php foreach ($profile_invitations as $invitation): ?>
 		<tr class="profile-invitation" id="invitation_<?php echo($invitation->id); ?>" tabindex="<?php echo( $i ) ?>" >
-			<td valign="top" class="draggable-vertical draggable-field-handle">&nbsp;</td>
-			<td valign="top"><div id="email_<?php echo($invitation->id); ?>" name="email_<?php echo($invitation->id); ?>" class="profile-invitation-email"><?php echo($invitation->email); ?></div></td>
-			<td valign="top"><div id="name_<?php echo($invitation->id); ?>" name="name_<?php echo($invitation->id); ?>" class="profile-invitation-name"><?php echo($invitation->name); ?></div></td>
-			<td valign="top"><div id="description_<?php echo($invitation->id); ?>" name="description_<?php echo($invitation->id); ?>" class="profile-invitation-description"><?php echo($invitation->description); ?></div></td>
+			<td valign="top" class="preview"><a href="<?php echo( $admin_options_tab->generate_profile_url( $invitation->guid ) ); ?>"><?php echo( $guthrie->preview_button() ); ?></a></td>
+			<td valign="top"><div id="email_<?php echo($invitation->id); ?>" name="email_<?php echo($invitation->id); ?>" class="cell-content-wrapper profile-invitation-email"><?php echo($invitation->email); ?></div></td>
+			<td valign="top"><div tabindex="1" id="name_<?php echo($invitation->id); ?>" name="name_<?php echo($invitation->id); ?>" class="cell-content-wrapper profile-invitation-name"><?php echo($invitation->name); ?></div></td>
+			<td valign="top"><div tabindex="1" id="description_<?php echo($invitation->id); ?>" name="description_<?php echo($invitation->id); ?>" class="cell-content-wrapper profile-invitation-description"><?php echo($invitation->description); ?></div></td>
 			<td>
 				<select multiple class="invitation-roles chzn-select roles-select" id="roles_<?php echo($invitation->id) ?>_role" data-placeholder="Choose a role...">
 					<option value=""></option>
@@ -66,8 +65,7 @@ $admin_options_tab = $admin_options->admin_options_tab;
 					<?php endforeach; ?>
 				</select>
 			</td>
-			<td valign="top"><a href="<?php echo( $admin_options_tab->generate_profile_url( $invitation->guid ) ); ?>" id="guid_<?php echo($invitation->id); ?>" name="guid_<?php echo($invitation->id); ?>" class="profile-invitation-guid"><?php echo( $admin_options_tab->generate_profile_url( $invitation->guid ) ); ?></a></td>
-			<td valign="top" class="delete">&nbsp;</td>
+			<td valign="top" class="delete"><?php echo( $guthrie->delete_button('delete-profile-invitation_' . $invitation->id) ); ?></td>
 		</tr>
 	<?php endforeach; ?>
 	</tbody>

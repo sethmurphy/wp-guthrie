@@ -258,18 +258,25 @@ class Guthrie {
 	function profile( $content = false ) {
 		global $wpdb;
 		global $page_id;
+
 		if ( ! ( strpos( $content , '[GUTHRIE]' ) === false ) ) {
 			$html = '';
 			if ( get_the_ID() == get_option( "guthrie_default_post_id" ) ) {
 				// dirty, inline css
 				$html = "<style>h3.post-title {display:none;}</style>";
 			}
-			$role_id = 1;
+			$role_id = 0;
 			// check if we passed a key
 			$key = "";
 			if ( array_key_exists ( 'key', $_REQUEST ) ) {
 				$key = $_REQUEST['key'];
+			} else {
+				// check if we are passed a role and can manage options
+				if ( current_user_can( 'manage_options' ) && array_key_exists ( 'role_id', $_REQUEST ) ) {
+					$role_id = $_REQUEST['role_id'];
+				}
 			}
+			
 			$invitation_id = null;
 			if ( isset( $key ) && $key != "" ) {
 				// get our invitation by key		
@@ -280,8 +287,13 @@ class Guthrie {
 				$invitation_id = 1; // the default public profile
 			}
 
-			// now get our profile based on the invitation id
-			$profilefields = $this->get_profile_field_instances( $invitation_id );
+			$profilefields = null;
+			if ( $role_id > 0 ) {
+				$profilefields = $this->get_profile_field_instances_by_role( $role_id );
+			} else {
+				// now get our profile based on the invitation id
+				$profilefields = $this->get_profile_field_instances( $invitation_id );
+			}			
 			$html.='<div class="profile-field-values" >';
 			foreach ( $profilefields as $field ) {
 				$value = $field->value;
@@ -397,6 +409,26 @@ class Guthrie {
 		return $this->profile_field_instances;
 	}
 
+	private $profile_field_instances_by_role;
+	function get_profile_field_instances_by_role( $role_id ){
+		if( ! isset( $this->profile_field_instances ) ){
+			global $wpdb;
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+			$sql = 'SELECT f.id, fi.id AS profile_field_instance_id, f.tag, f.name, f.description, fi.value, group_concat(r.id) AS roles ' .
+				   'FROM ' . $wpdb->prefix . 'guthrie_profile_field_instance as fi ' .
+				   'LEFT JOIN ' . $wpdb->prefix . 'guthrie_profile_field f ON f.id = fi.profile_field_id ' .
+				   'LEFT JOIN ' . $wpdb->prefix . 'guthrie_profile_field_role fr ON f.id = fr.profile_field_id ' .
+				   'LEFT JOIN ' . $wpdb->prefix . 'guthrie_profile_role r ON r.id = fr.profile_role_id ' .
+			     'WHERE r.id = ' . $role_id . ' ' .
+				   'GROUP BY f.id ' .
+				   'ORDER BY fi.sequence, f.sequence, r.sequence, profile_field_instance_id;';
+			//echo($sql);
+			$this->profile_field_instances_by_role = $wpdb->get_results( $sql, OBJECT );
+		}			
+		return $this->profile_field_instances_by_role;
+	}
+
 	/****************************************
 	 *  End data access methods
 	 ****************************************/
@@ -469,4 +501,18 @@ class Guthrie {
 	/*******************************************************
 	 *  End of AJAX wrappers
 	 ********************************************************/
+	/********************************************************
+	 * common gui stuff
+	 ********************************************************/
+	function delete_button( $element_id ) {
+		return '<span class="delete-button" id="' . $element_id . '"/>';
+	}
+
+	function drag_button() {
+		return '<span class="drag-button" />';
+	}
+
+	function preview_button() {
+		return '<span class="preview-button" />';
+	}
 }

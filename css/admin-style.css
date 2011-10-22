@@ -24,15 +24,20 @@
 .draggable-field-instance-helper {
 	background-color: #F3F3F3;
 }
-.draggable-vertical {
+.preview-button,
+.drag-button {
 	width: 24px;
 	height: 24px;
 	display: block;
-	float: left;
 }
-.profile-field-instance:hover .draggable-vertical,
-.draggable-field-instance-helper  .draggable-vertical {
+.profile-field-instance:hover .drag-button {
 	background: url(drag-n-drop.png) no-repeat center;
+	cursor: move;
+}
+
+.profile-role:hover .preview-button,
+.profile-invitation:hover .preview-button {
+	background: url(preview.png) no-repeat center;
 	cursor: move;
 }
 
@@ -54,9 +59,7 @@
 .profile-field {
 	width: 300px;
 }
-.profile-field,
-.profile-role-description,
-.profile-role-name {
+.cell-content-wrapper {
 	height: 2.25em;
 }
 #profile-fields td label,
@@ -75,13 +78,14 @@
 
 
 
-.delete {
+.delete-button {
 	width: 24px;
 	height: 24px;
+	display: block;
 }
-.profile-field-instance:hover .delete,
-.profile-role:hover .delete,
-.profile-invitation:hover .delete {
+.profile-field-instance:hover .delete-button,
+.profile-role:hover .delete-button,
+.profile-invitation:hover .delete-button {
 	background: url(delete_16x16.gif) no-repeat center;
 	cursor: pointer;
 }
@@ -97,5 +101,13 @@ th .instructions {
 }
 .profile-role-name {
 	width: 300px;
+}
+.field-input {
+	margin-top: 3px;
+	margin-left: 1%;
+}
+.editable {
+	padding-top: 5px;
+	padding-left: 1%;
 }
 
