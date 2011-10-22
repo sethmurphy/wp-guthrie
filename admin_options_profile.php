@@ -123,7 +123,8 @@ class Guthrie_Admin_Options_Profile {
 				'time' => current_time( 'mysql' ), 
 				'id' => null, 
 				'profile_field_id' => $profile_field_id, 
-				'value' => $this->value ) 
+				'value' => $this->value, 
+				'sequence' => 99999 ) 
 			);
 
 			$this->guthrie->status_message = "Added field!";
