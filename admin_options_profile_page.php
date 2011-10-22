@@ -44,27 +44,27 @@ $admin_options_tab = $admin_options->admin_options_tab;
 	<tbody>
 	<?php $i=0; ?>
 	<?php foreach ($profile_field_instances as $field): ?>
-		<tr class="profile-field-instance" id="field-instance_<?php echo($field->id); ?>" >
+		<tr class="profile-field-instance" id="field-instance_<?php echo( $field->id ); ?>" >
 			<td valign="top" class="draggable-vertical draggable-field-handle"><?php echo( $guthrie->drag_button() ); ?></td>
-			<td><label for="<?php echo($field->tag) ?>_<?php echo($field->id) ?>" class="cell-content-wrapper"><?php echo($field->name) ?> [<?php echo($field->tag) ?>]:</label></td>
-			<td><div tabindex="1" id="<?php echo($field->tag); ?>_<?php echo($field->id); ?>" name="<?php echo($field->tag); ?>_<?php echo($field->id); ?>" class="cell-content-wrapper profile-field"><?php echo($field->value); ?></div></td>
+			<td><label for="<?php echo( $field->tag ) ?>_<?php echo( $field->id ) ?>" class="cell-content-wrapper"><?php echo( $field->name ) ?> [<?php echo( $field->tag ) ?>]:</label></td>
+			<td><div tabindex="1" id="<?php echo( $field->tag ); ?>_<?php echo( $field->id ); ?>" name="<?php echo( $field->tag ); ?>_<?php echo( $field->id ); ?>" class="cell-content-wrapper profile-field"><?php echo( $field->value ); ?></div></td>
 			<td>
-				<select tabindex="1" multiple class="cell-content-wrapper field-roles chzn-select roles-select" id="<?php echo($field->tag) ?>_<?php echo($field->id) ?>_role" data-placeholder="Choose a role...">
+				<select tabindex="1" multiple class="cell-content-wrapper field-roles chzn-select roles-select" id="<?php echo( $field->tag ) ?>_<?php echo( $field->id ) ?>_role" data-placeholder="Choose a role...">
 					<option value=""></option>
 					<?php $chosen_roles = explode ( ',' , $field->roles ); ?>
 
-					<?php foreach ($profile_roles as $role): ?>
+					<?php foreach( $profile_roles as $role ): ?>
 					<?php 
 						$selected = '';
-						if(in_array($role->id ,$chosen_roles)){
+						if( in_array( $role->id ,$chosen_roles ) ){
 							$selected = ' selected="selected"';
 						}
 						?>
-					<option<?php echo($selected) ?> value="<?php echo($role->id); ?>"><?php echo($role->name) ?></option>
+					<option<?php echo( $selected ) ?> value="<?php echo( $role->id ); ?>"><?php echo( $role->name ) ?></option>
 					<?php endforeach; ?>
 				</select>
 			</td>
-			<td valign="top" class="delete"><?php echo( $guthrie->delete_button( 'delete-profile-field_' . $field->profile_field_instance_id . '_' . $field->id) ); ?></td>
+			<td valign="top" class="delete"><?php echo( $guthrie->delete_button( 'delete-profile-field_' . $field->profile_field_instance_id . '_' . $field->id ) ); ?></td>
 		</tr>
 	<?php endforeach; ?>
 	</tbody>
@@ -72,7 +72,7 @@ $admin_options_tab = $admin_options->admin_options_tab;
 
 <form action="<?php the_permalink(); ?>" id="profileAddForm" method="post">
 	<h3 class="add-a-field">Add a Field</h3>
-	<input type="hidden" value="profile-field-submitted" name="profile-field-submitted" />
+	<input type="hidden" value="profile-field-add-submitted" name="profile-field-add-submitted" />
 	<table class="form-table">
 		<tbody>
 			<tr valign="top">
@@ -82,8 +82,8 @@ $admin_options_tab = $admin_options->admin_options_tab;
 				<td>
 					<input type="text" name="profile-field-add-field-name" id="profile-field-add-field-name" value="<?php echo( $admin_options_tab->name ); ?>" class="regular-text" />
 					<span class="description">required</span>
-					<?php if ( ! ('' == $admin_options_tab->name_error) ) : ?>
-						<div class="error"><?php echo($admin_options_tab->name_error); ?></div>
+					<?php if ( ! ('' == $admin_options_tab->name_error ) ) : ?>
+						<div class="error"><?php echo( $admin_options_tab->name_error ); ?></div>
 					<?php endif; ?>
 				</td>
 			</tr>
@@ -94,7 +94,7 @@ $admin_options_tab = $admin_options->admin_options_tab;
 				<td>
 					<input type="text" name="profile-field-add-field-tag" id="profile-field-add-field-tag" value="<?php echo( $admin_options_tab->tag ); ?>" class="regular-text" />
 					<span class="description">required</span>
-					<?php if ( ! ('' == $admin_options_tab->tag_error) ) : ?>
+					<?php if ( ! ('' == $admin_options_tab->tag_error ) ) : ?>
 						<div class="error"><?php echo( $admin_options_tab->tag_error ); ?></div>
 					<?php endif; ?>
 				</td>
@@ -106,13 +106,13 @@ $admin_options_tab = $admin_options->admin_options_tab;
 				<td>
 					<select name="profile-field-add-field-type" id="profile-field-add-field-type" class="field-type-select">
 						<?php $selected = ''; ?>
-						<?php foreach ($profile_field_types as $field_type): ?>
+						<?php foreach( $profile_field_types as $field_type ): ?>
 							<?php if ( $admin_options_tab->type == $field_type->id ) { $selected = ' selected="selected"'; } ?>
 							<option value="<?php echo( $field_type->id ); ?>"<?php echo( $selected ); ?> ><?php echo( $field_type->name ); ?></option>
 						<?php endforeach; ?>					
 					</select>
 					<span class="description">required</span>
-					<?php if ( ! ('' == $admin_options_tab->type_error) ) : ?>
+					<?php if ( ! ( '' == $admin_options_tab->type_error ) ) : ?>
 						<div class="error"><?php echo( $admin_options_tab->type_error ); ?></div>
 					<?php endif; ?>
 				</td>
@@ -131,7 +131,7 @@ $admin_options_tab = $admin_options->admin_options_tab;
 				</th>
 				<td>
 					<textarea height="1" name="profile-field-add-field-value" id="profile-field-add-field-value"><?php echo( $admin_options_tab->value ); ?></textarea>
-					<?php if ( ! ('' == $admin_options_tab->value_error) ) : ?>
+					<?php if ( ! ('' == $admin_options_tab->value_error ) ): ?>
 						<div class="error"><?php echo( $admin_options_tab->value_error ); ?></div>
 					<?php endif; ?>
 				</td>
@@ -144,14 +144,14 @@ $admin_options_tab = $admin_options->admin_options_tab;
 					<select multiple class="profile-field-add-roles chzn-select roles-select" name="profile-field-add-roles" id="profile-field-add-roles" data-placeholder="Choose a role...">
 						<option value=""></option>
 
-						<?php foreach ($profile_roles as $role): ?>
-						<option value="<?php echo($role->id); ?>"><?php echo($role->name) ?></option>
+						<?php foreach( $profile_roles as $role ): ?>
+						<option value="<?php echo( $role->id ); ?>"><?php echo( $role->name ) ?></option>
 						<?php endforeach; ?>
 					</select>
 		
 
-					<?php if ( ! ('' == $admin_options_tab->roles_error) ) : ?>
-						<div class="error"><?php echo($admin_options_tab->roles_error); ?></div>
+					<?php if ( ! ( '' == $admin_options_tab->roles_error ) ) : ?>
+						<div class="error"><?php echo( $admin_options_tab->roles_error ); ?></div>
 					<?php endif; ?>
 				</td>
 			</tr>

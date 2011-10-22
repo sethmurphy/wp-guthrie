@@ -269,11 +269,11 @@ class Guthrie {
 			// check if we passed a key
 			$key = "";
 			if ( array_key_exists ( 'key', $_REQUEST ) ) {
-				$key = $_REQUEST['key'];
+				$key = $_REQUEST[ 'key' ];
 			} else {
 				// check if we are passed a role and can manage options
 				if ( current_user_can( 'manage_options' ) && array_key_exists ( 'role_id', $_REQUEST ) ) {
-					$role_id = $_REQUEST['role_id'];
+					$role_id = $_REQUEST[ 'role_id' ];
 				}
 			}
 			
@@ -283,7 +283,7 @@ class Guthrie {
 				$table_name = $wpdb->prefix . "guthrie_profile_invitation"; 
 				$invitation_id = $wpdb->get_var( "select id from $table_name where guid='$key'" );
 			}
-			if ( ! isset( $invitation_id ) || '' == $invitation_id) {
+			if ( ! isset( $invitation_id ) || '' == $invitation_id ) {
 				$invitation_id = 1; // the default public profile
 			}
 
@@ -341,7 +341,7 @@ class Guthrie {
 		if( ! isset( $this->profile_field_types ) ){
 			global $wpdb;
 			$table_name = $wpdb->prefix . "guthrie_profile_field_type"; 
-			$sql = "SELECT * FROM $table_name;";
+			$sql = "SELECT * FROM $table_name";
 			$this->profile_field_types = $wpdb->get_results( $sql, OBJECT );
 		}
 		return $this->profile_field_types;
@@ -355,7 +355,7 @@ class Guthrie {
 			$table_name = $wpdb->prefix . "guthrie_profile_role"; 
 			$sql = "SELECT pr.id, pr.name, pr.description " .
 					"FROM $table_name AS pr " .
-					"ORDER BY sequence, id;";
+					"ORDER BY sequence, id";
 			$this->profile_roles = $wpdb->get_results( $sql, OBJECT );
 		}
 		return $this->profile_roles;
@@ -371,7 +371,7 @@ class Guthrie {
 			       "FROM $table_name as pi " .
 			       "LEFT JOIN " . $wpdb->prefix . "guthrie_profile_invitation_role ir ON ir.profile_invitation_id = pi.id " .
 			       "GROUP BY pi.id ".
-				   "ORDER BY pi.id;";
+			       "ORDER BY pi.id;";
 			$this->profile_field_roles = $wpdb->get_results( $sql, OBJECT );
 		}
 		return $this->profile_field_roles;

@@ -114,8 +114,8 @@ class Guthrie_Ajax {
 		    array_key_exists ( 'value' , $_POST ) &&
 		    array_key_exists ( 'field_instance_id' , $_POST ) &&
 		    array_key_exists ( 'original_value' , $_POST )) {
-			$element_id = $_POST['element_id'];
-			$value = $_POST['value'];
+			$element_id = $_POST[ 'element_id' ];
+			$value = $_POST[ 'value' ];
 			$field_instance_id = $_POST[ 'field_instance_id' ];
 			$original_value = $_POST[ 'original_value' ];
 			$table_name = $wpdb->prefix . "guthrie_profile_field_instance";
@@ -154,7 +154,7 @@ class Guthrie_Ajax {
 			                       "FROM " . $wpdb->prefix . "guthrie_profile_field_role AS fr " .
 			                       "WHERE fr.profile_field_id=%d", $field_id );
 			
-			$profilefieldroles = $wpdb->get_results($sql, OBJECT);
+			$profilefieldroles = $wpdb->get_results( $sql, OBJECT );
 			
 			if( sizeof( $profilefieldroles ) > sizeof( $field_roles ) ) {
 				// we need to remove a record from the DB
@@ -200,7 +200,7 @@ class Guthrie_Ajax {
 		} else {
 			// remove all roles
 			if( array_key_exists ( 'field_id' , $_POST ) ) {
-				$field_id = $_POST['field_id'];
+				$field_id = $_POST[ 'field_id' ];
 				$table_name = $wpdb->prefix . "guthrie_profile_field_role";
 				$sql = $wpdb->prepare( "DELETE FROM $table_name WHERE profile_field_id = %d", $field_id );
 				$wpdb->query( $sql );
@@ -233,7 +233,7 @@ class Guthrie_Ajax {
 			                       "FROM " . $wpdb->prefix . "guthrie_profile_invitation_role AS ir " .
 			                       "WHERE ir.profile_invitation_id=%d", $invitation_id );
 			
-			$profileinvitationroles = $wpdb->get_results($sql, OBJECT);
+			$profileinvitationroles = $wpdb->get_results( $sql, OBJECT);
 			
 			if( sizeof( $profileinvitationroles ) > sizeof( $invitation_roles ) ) {
 				// we need to remove a record from the DB
@@ -279,7 +279,7 @@ class Guthrie_Ajax {
 		} else {
 			// remove all roles
 			if( array_key_exists ( 'field_id' , $_POST ) ) {
-				$field_id = $_POST['field_id'];
+				$field_id = $_POST[ 'field_id' ];
 				$table_name = $wpdb->prefix . "guthrie_profile_invitation_role";
 				$sql = $wpdb->prepare( "DELETE FROM $table_name WHERE profile_invitation_id = %d", $invitation_id );
 				$wpdb->query( $sql );
@@ -312,12 +312,12 @@ class Guthrie_Ajax {
 
 			// remove our field instances	
 			$table_name = $wpdb->prefix . "guthrie_profile_field_instance";
-			$sql = $wpdp->prepare( "DELETE FROM $table_name WHERE id = %d", $profile_field_instance_id );
+			$sql = $wpdb->prepare( "DELETE FROM $table_name WHERE id = %d", $profile_field_instance_id );
 			$wpdb->query( $sql );
 			
 			// remove our field
 			$table_name = $wpdb->prefix . "guthrie_profile_field";
-			$sql = $wpdp->prepare( "DELETE FROM $table_name WHERE id = %d", $profile_field_id );
+			$sql = $wpdb->prepare( "DELETE FROM $table_name WHERE id = %d", $profile_field_id );
 			$wpdb->query( $sql );
 			$success = true;
 		}
@@ -421,8 +421,8 @@ class Guthrie_Ajax {
 		    array_key_exists ( 'name' , $_POST ) &&
 		    array_key_exists ( 'role_id' , $_POST ) &&
 		    array_key_exists ( 'original_value' , $_POST )) {
-			$element_id = $_POST['element_id'];
-			$name = $_POST['name'];
+			$element_id = $_POST[ 'element_id' ];
+			$name = $_POST[ 'name' ];
 			$role_id = $_POST[ 'role_id' ];
 			$original_value = $_POST[ 'original_value' ];
 			$table_name = $wpdb->prefix . "guthrie_profile_role";
@@ -459,8 +459,8 @@ class Guthrie_Ajax {
 		    array_key_exists ( 'description' , $_POST ) &&
 		    array_key_exists ( 'role_id' , $_POST ) &&
 		    array_key_exists ( 'original_value' , $_POST )) {
-			$element_id = $_POST['element_id'];
-			$description = $_POST['description'];
+			$element_id = $_POST[ 'element_id' ];
+			$description = $_POST[ 'description' ];
 			$role_id = $_POST[ 'role_id' ];
 			$original_value = $_POST[ 'original_value' ];
 			$table_name = $wpdb->prefix . "guthrie_profile_role";
@@ -497,8 +497,8 @@ class Guthrie_Ajax {
 		    array_key_exists ( 'name' , $_POST ) &&
 		    array_key_exists ( 'invitation_id' , $_POST ) &&
 		    array_key_exists ( 'original_value' , $_POST )) {
-			$element_id = $_POST['element_id'];
-			$name = $_POST['name'];
+			$element_id = $_POST[ 'element_id' ];
+			$name = $_POST[ 'name' ];
 			$invitation_id = $_POST[ 'invitation_id' ];
 			$original_value = $_POST[ 'original_value' ];
 			$table_name = $wpdb->prefix . "guthrie_profile_invitation";
@@ -535,8 +535,8 @@ class Guthrie_Ajax {
 		    array_key_exists ( 'description' , $_POST ) &&
 		    array_key_exists ( 'invitation_id' , $_POST ) &&
 		    array_key_exists ( 'original_value' , $_POST )) {
-			$element_id = $_POST['element_id'];
-			$description = $_POST['description'];
+			$element_id = $_POST[ 'element_id' ];
+			$description = $_POST[ 'description' ];
 			$invitation_id = $_POST[ 'invitation_id' ];
 			$original_value = $_POST[ 'original_value' ];
 			$table_name = $wpdb->prefix . "guthrie_profile_invitation";

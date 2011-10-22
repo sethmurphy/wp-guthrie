@@ -39,7 +39,7 @@ class Guthrie_Admin_Options_Profile {
 	public $profile_roles = array();
 
 	function factory( $guthrie = null ) {
-		return new Guthrie_Admin_Options_Profile($guthrie);
+		return new Guthrie_Admin_Options_Profile( $guthrie );
 	}
 
 	function Guthrie_Admin_Options_Profile( $guthrie = null ) {
@@ -48,7 +48,7 @@ class Guthrie_Admin_Options_Profile {
 
 	function __construct( $guthrie = null ) {
 		$this->guthrie = $guthrie;
-		if( isset( $_POST['submitted'] ) ) {
+		if( isset( $_POST[ 'profile-field-add-submitted' ] ) ) {
 			$this->do_submit();
 		}
 	}
@@ -57,15 +57,15 @@ class Guthrie_Admin_Options_Profile {
 		global $wpdb;
 		$has_error = false;
 
-		$this->name = trim( $_POST['profile-field-add-field-name'] );
+		$this->name = trim( $_POST[ 'profile-field-add-field-name' ] );
 		if( '' === $this->name ) {
 			$this->name_error = 'Please enter the fields name.';
 			$has_error = true;
 		}
 	
-		$this->description = trim( $_POST['profile-field-add-field-description'] );
+		$this->description = trim( $_POST[ 'profile-field-add-field-description' ] );
 	
-		$this->tag = trim( $_POST['profile-field-add-field-tag'] );
+		$this->tag = trim( $_POST[ 'profile-field-add-field-tag' ] );
 		if( '' == $this->tag) {
 			$this->tag_error = 'Please enter a field tag.';
 			$has_error = true;
@@ -74,21 +74,21 @@ class Guthrie_Admin_Options_Profile {
 			$has_error = true;
 		}
 	
-		$this->type = trim($_POST['profile-field-add-field-name']);
+		$this->type = trim( $_POST[ 'profile-field-add-field-name' ]);
 		if( '' == $this->type ) {
 			$this->name_error = 'Please select a field type.';
 			$has_error = true;
 		}
 	
-		$this->value = trim( $_POST['profile-field-add-field-value'] );
+		$this->value = trim( $_POST[ 'profile-field-add-field-value' ] );
 		if( '' == $this->value ) {
 			$this->value_error = 'Please enter the value.';
 			$has_error = true;
 		}
 
 		if( array_key_exists ( 'profile-field-add-roles' , $_POST ) ) {
-			$this->roles = $_POST['profile-field-add-roles'];
-			if( sizeof($this->roles) == 0 || '' == $this->roles[0] ) {
+			$this->roles = $_POST[ 'profile-field-add-roles' ];
+			if( sizeof( $this->roles ) == 0 || '' == $this->roles[ 0 ] ) {
 				$this->roles_error = 'Please choose at least one role.';
 				$has_error = true;
 			}

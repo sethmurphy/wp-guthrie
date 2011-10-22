@@ -6,30 +6,37 @@
 	padding-left: 8px;
 	display: block;
 }
+
 .profile-field-add-field-name-container,
 .field-instance-container label {
 	cursor: auto;
 }
+
 .field-instance-container .editable {
 	cursor: text;
 }
+
 .clearfix {
   clear: both;
 }
+
 .instructions {
 	font-size: .825em;
 	font-style: italic;
 	font-weight: normal;
 }
+
 .draggable-field-instance-helper {
 	background-color: #F3F3F3;
 }
+
 .preview-button,
 .drag-button {
 	width: 24px;
 	height: 24px;
 	display: block;
 }
+
 .profile-field-instance:hover .drag-button {
 	background: url(drag-n-drop.png) no-repeat center;
 	cursor: move;
@@ -50,39 +57,43 @@
 #profile-field-instances .chzn-container-multi .chzn-choices {
 	cursor: pointer;
 }
+
 #draggable-field-instance-helper th,
 #draggable-field-instance-helper td label,
 #profile-fields td label,
 #profile-fields th {
 	white-space: nowrap;
 }
+
 .profile-field {
 	width: 300px;
 }
+
 .cell-content-wrapper {
 	height: 2.25em;
 }
+
 #profile-fields td label,
 #draggable-field-instance-helper td label{
 	width: 200px;
 	display: block;
 }
+
 #profile-fields td {
 	vertical-align: top;
 }
+
 .roles-select, 
 .field-type-select {
 	width: 25em;
 }
-
-
-
 
 .delete-button {
 	width: 24px;
 	height: 24px;
 	display: block;
 }
+
 .profile-field-instance:hover .delete-button,
 .profile-role:hover .delete-button,
 .profile-invitation:hover .delete-button {
@@ -99,13 +110,16 @@
 th .instructions {
 	color: red; 
 }
+
 .profile-role-name {
 	width: 300px;
 }
+
 .field-input {
 	margin-top: 3px;
 	margin-left: 1%;
 }
+
 .editable {
 	padding-top: 5px;
 	padding-left: 1%;

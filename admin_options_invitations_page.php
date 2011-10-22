@@ -43,29 +43,29 @@ $admin_options_tab = $admin_options->admin_options_tab;
 	</thead>
 	<tbody>
 	<?php $i=0; ?>
-	<?php foreach ($profile_invitations as $invitation): ?>
-		<tr class="profile-invitation" id="invitation_<?php echo($invitation->id); ?>" tabindex="<?php echo( $i ) ?>" >
+	<?php foreach( $profile_invitations as $invitation ): ?>
+		<tr class="profile-invitation" id="invitation_<?php echo( $invitation->id ); ?>" tabindex="<?php echo( $i ) ?>" >
 			<td valign="top" class="preview"><a href="<?php echo( $admin_options_tab->generate_profile_url( $invitation->guid ) ); ?>"><?php echo( $guthrie->preview_button() ); ?></a></td>
-			<td valign="top"><div id="email_<?php echo($invitation->id); ?>" name="email_<?php echo($invitation->id); ?>" class="cell-content-wrapper profile-invitation-email"><?php echo($invitation->email); ?></div></td>
-			<td valign="top"><div tabindex="1" id="name_<?php echo($invitation->id); ?>" name="name_<?php echo($invitation->id); ?>" class="cell-content-wrapper profile-invitation-name"><?php echo($invitation->name); ?></div></td>
-			<td valign="top"><div tabindex="1" id="description_<?php echo($invitation->id); ?>" name="description_<?php echo($invitation->id); ?>" class="cell-content-wrapper profile-invitation-description"><?php echo($invitation->description); ?></div></td>
+			<td valign="top"><div id="email_<?php echo( $invitation->id ); ?>" name="email_<?php echo( $invitation->id ); ?>" class="cell-content-wrapper profile-invitation-email"><?php echo( $invitation->email ); ?></div></td>
+			<td valign="top"><div tabindex="1" id="name_<?php echo( $invitation->id ); ?>" name="name_<?php echo($invitation->id); ?>" class="cell-content-wrapper profile-invitation-name"><?php echo( $invitation->name ); ?></div></td>
+			<td valign="top"><div tabindex="1" id="description_<?php echo( $invitation->id ); ?>" name="description_<?php echo( $invitation->id ); ?>" class="cell-content-wrapper profile-invitation-description"><?php echo( $invitation->description ); ?></div></td>
 			<td>
-				<select multiple class="invitation-roles chzn-select roles-select" id="roles_<?php echo($invitation->id) ?>_role" data-placeholder="Choose a role...">
+				<select multiple class="invitation-roles chzn-select roles-select" id="roles_<?php echo( $invitation->id ) ?>_role" data-placeholder="Choose a role...">
 					<option value=""></option>
 					<?php $chosen_roles = explode ( ',' , $invitation->roles ); ?>
 
-					<?php foreach ($profile_roles as $role): ?>
+					<?php foreach ( $profile_roles as $role ): ?>
 					<?php 
 						$selected = '';
-						if(in_array($role->id ,$chosen_roles)){
+						if( in_array( $role->id ,$chosen_roles ) ){
 							$selected = ' selected="selected"';
 						}
 						?>
-					<option<?php echo($selected) ?> value="<?php echo($role->id); ?>"><?php echo($role->name) ?></option>
+					<option<?php echo( $selected ); ?> value="<?php echo( $role->id ); ?>"><?php echo( $role->name ); ?></option>
 					<?php endforeach; ?>
 				</select>
 			</td>
-			<td valign="top" class="delete"><?php echo( $guthrie->delete_button('delete-profile-invitation_' . $invitation->id) ); ?></td>
+			<td valign="top" class="delete"><?php echo( $guthrie->delete_button( 'delete-profile-invitation_' . $invitation->id ) ); ?></td>
 		</tr>
 	<?php endforeach; ?>
 	</tbody>
@@ -83,8 +83,8 @@ $admin_options_tab = $admin_options->admin_options_tab;
 				<td>
 					<input type="text" name="profile-invite-email" id="profile-invite-email" value="<?php echo( $admin_options_tab->email ); ?>"  class="regular-text" />
 					<span class="description">required</span>
-					<?php if ( ! ('' == $admin_options_tab->email_error) ) : ?>
-						<div class="error"><?php echo($admin_options_tab->email_error); ?></div>
+					<?php if ( ! ( '' == $admin_options_tab->email_error ) ) : ?>
+						<div class="error"><?php echo( $admin_options_tab->email_error ); ?></div>
 					<?php endif; ?>
 				</td>
 			</tr>
@@ -95,7 +95,7 @@ $admin_options_tab = $admin_options->admin_options_tab;
 				<td>
 					<input type="text" name="profile-invite-name" id="profile-invite-name" value="<?php echo( $admin_options_tab->name ); ?>"  class="regular-text" />
 					<?php if ( ! ('' == $admin_options_tab->name_error) ) : ?>
-						<div class="error"><?php echo($admin_options_tab->name_error); ?></div>
+						<div class="error"><?php echo( $admin_options_tab->name_error ); ?></div>
 					<?php endif; ?>
 				</td>
 			</tr>
@@ -105,8 +105,8 @@ $admin_options_tab = $admin_options->admin_options_tab;
 				</th>
 				<td>
 					<input type="text" name="profile-invite-description" id="profile-invite-description" value="<?php echo( $admin_options_tab->description ); ?>"  class="regular-text" />
-					<?php if ( ! ('' == $admin_options_tab->description_error) ) : ?>
-						<div class="error"><?php echo($admin_options_tab->description_error); ?></div>
+					<?php if ( ! ( '' == $admin_options_tab->description_error ) ) : ?>
+						<div class="error"><?php echo( $admin_options_tab->description_error ); ?></div>
 					<?php endif; ?>
 				</td>
 			</tr>
@@ -118,14 +118,14 @@ $admin_options_tab = $admin_options->admin_options_tab;
 					<select multiple class="profile-invite-roles chzn-select roles-select" name="profile-invite-roles" id="profile-invite-roles" data-placeholder="Choose a role...">
 						<option value=""></option>
 
-						<?php foreach ($profile_roles as $role): ?>
-						<option value="<?php echo($role->id); ?>"><?php echo($role->name) ?></option>
+						<?php foreach( $profile_roles as $role ): ?>
+						<option value="<?php echo( $role->id ); ?>"><?php echo( $role->name ); ?></option>
 						<?php endforeach; ?>
 					</select>
 		
 
-					<?php if ( ! ('' == $admin_options_tab->roles_error) ) : ?>
-						<div class="error"><?php echo($admin_options_tab->roles_error); ?></div>
+					<?php if( ! ( '' == $admin_options_tab->roles_error ) ): ?>
+						<div class="error"><?php echo( $admin_options_tab->roles_error ); ?></div>
 					<?php endif; ?>
 				</td>
 			</tr>

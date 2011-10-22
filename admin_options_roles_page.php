@@ -41,11 +41,11 @@ $admin_options_tab = $admin_options->admin_options_tab;
 	</thead>
 	<tbody>
 	<?php $i=0; ?>
-	<?php foreach ($profile_roles as $role): ?>
-		<tr class="profile-role" id="role_<?php echo($role->id); ?>" tabindex="<?php echo( $i ) ?>" >
+	<?php foreach ( $profile_roles as $role ): ?>
+		<tr class="profile-role" id="role_<?php echo( $role->id ); ?>" tabindex="<?php echo( $i ) ?>" >
 			<td valign="top" class="preview"><a href="<?php echo( $admin_options_tab->generate_profile_url( $role->id ) ); ?>"><?php echo( $guthrie->preview_button() ); ?></a></td>
-			<td valign="top"><div tabindex="1" id="name_<?php echo($role->id); ?>" name="name_<?php echo($role->id); ?>" class="cell-content-wrapper profile-role-name"><?php echo($role->name); ?></div></td>
-			<td valign="top"><div tabindex="1" id="description_<?php echo($role->name); ?>" name="description_<?php echo($role->id); ?>" class="cell-content-wrapper profile-role-description"><?php echo($role->description); ?></div></td>
+			<td valign="top"><div tabindex="1" id="name_<?php echo( $role->id ); ?>" name="name_<?php echo( $role->id ); ?>" class="cell-content-wrapper profile-role-name"><?php echo( $role->name ); ?></div></td>
+			<td valign="top"><div tabindex="1" id="description_<?php echo( $role->name ); ?>" name="description_<?php echo( $role->id ); ?>" class="cell-content-wrapper profile-role-description"><?php echo( $role->description ); ?></div></td>
 			<td valign="top" class="delete"><?php echo( $guthrie->delete_button( 'delete-profile-role_' . $role->id ) ); ?></td>
 		</tr>
 	<?php endforeach; ?>
@@ -64,8 +64,8 @@ $admin_options_tab = $admin_options->admin_options_tab;
 				<td>
 					<input type="text" name="profile-add-role-name" id="profile-add-role-name" value="<?php echo( $admin_options_tab->name ); ?>" class="regular-text" />
 					<span class="description">required</span>
-					<?php if ( ! ('' == $admin_options_tab->name_error) ) : ?>
-						<div class="error"><?php echo($admin_options_tab->name_error); ?></div>
+					<?php if( ! ('' == $admin_options_tab->name_error) ): ?>
+						<div class="error"><?php echo( $admin_options_tab->name_error ); ?></div>
 					<?php endif; ?>
 				</td>
 			</tr>
@@ -76,8 +76,8 @@ $admin_options_tab = $admin_options->admin_options_tab;
 				<td>
 					<input type="text" name="profile-add-role-description" id="profile-add-role-description" value="<?php echo( $admin_options_tab->description ); ?>" class="regular-text" />
 					<span class="description">required</span>
-					<?php if ( ! ('' == $admin_options_tab->description_error) ) : ?>
-						<div class="error"><?php echo($admin_options_tab->description_error); ?></div>
+					<?php if ( ! ( '' == $admin_options_tab->description_error ) ) : ?>
+						<div class="error"><?php echo( $admin_options_tab->description_error ); ?></div>
 					<?php endif; ?>
 				</td>
 			</tr>
