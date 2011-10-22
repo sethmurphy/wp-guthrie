@@ -70,7 +70,7 @@
 }
 
 .cell-content-wrapper {
-	height: 2.25em;
+	min-height: 2.25em;
 }
 
 #profile-fields td label,
