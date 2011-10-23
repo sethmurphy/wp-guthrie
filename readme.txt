@@ -31,5 +31,6 @@ This is the first release, there are no changes yet ...
 This is the first release, there are no upgrade notices yet ...
 
 == Screenshots ==
+1. A simple Guthrie public profile.
 
 For more details on this plugin and it's usage visit http://guthrie.sethmurphy.com
