@@ -304,7 +304,7 @@ class Guthrie {
 					}
 					$value = '<a href="' . $mailto . $value . '">' . $value . '</a>';
 				}
-				$html.='<div class="profile-field-value profile-field-value_' . $field->tag . '" >'. $value .'</div>';
+				$html.='<div class="profile-field-value profile-field-value_' . $field->tag . '" >'. stripslashes( $value ) .'</div>';
 			}
 			$html.='<div class="clearfix"></div></div>';
 			$content = str_replace ( '[GUTHRIE]' , $html , $content );

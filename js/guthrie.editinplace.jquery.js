@@ -59,10 +59,21 @@
 				var settings = $this.data("settings");
 				//var original_field_value = $this.html();
 				var original_field_value = $this.find(".editable").html();
-				var html = '<input type="text" class="field-input editing" value="' + original_field_value + '" />' +
-				           '<div class="debug"></div>' +
-				           '<div class="log"></div>';
+				var html = '';
+				var field_type ='';
+				if( $this.height() + "px" ==  $this.css('min-height') ) {
+					html = '<input type="text" class="field-input editing"/>' +
+				         '<div class="debug"></div>' +
+				         '<div class="log"></div>';
+				  field_type = 'input'; 
+				} else {
+					html = '<textarea class="field-input editing" style="line-height: normal; height: ' + ($this.height()) + 'px" ></textarea>' +
+				         '<div class="debug"></div>' +
+				         '<div class="log"></div>';
+				  field_type = 'textarea'; 
+				}
 				$this.html(html);
+				$this.find(".editing").attr("value", original_field_value)
 				$this.css("z-index",9999);
 
 				var field_input = $this.find(".field-input");
@@ -70,6 +81,7 @@
 
 				field_input.bind('blur.fieldEvents', methods.blur_handler);
 				field_input.focus();
+				$this.data("field-type", field_type);
 				$this.data("field-input", field_input);
 				$this.data("original-field-value", original_field_value);
 			},
@@ -141,7 +153,6 @@
 				var data = '';
 				var url = settings.url;
 				var element_id = $this.attr("id"); 
-
 				data += settings.element_id + '=' + encodeURIComponent(element_id)
 					+ '&action=' + encodeURIComponent(settings.action)
 					+ '&' + settings.original_field_value + '=' + encodeURIComponent(original_value)

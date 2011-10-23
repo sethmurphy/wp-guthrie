@@ -47,7 +47,7 @@ $admin_options_tab = $admin_options->admin_options_tab;
 		<tr class="profile-field-instance" id="field-instance_<?php echo( $field->id ); ?>" >
 			<td valign="top" class="draggable-vertical draggable-field-handle"><?php echo( $guthrie->drag_button() ); ?></td>
 			<td><label for="<?php echo( $field->tag ) ?>_<?php echo( $field->id ) ?>" class="cell-content-wrapper"><?php echo( $field->name ) ?> [<?php echo( $field->tag ) ?>]:</label></td>
-			<td><div tabindex="1" id="<?php echo( $field->tag ); ?>_<?php echo( $field->id ); ?>" name="<?php echo( $field->tag ); ?>_<?php echo( $field->id ); ?>" class="cell-content-wrapper profile-field"><?php echo( $field->value ); ?></div></td>
+			<td><div tabindex="1" id="<?php echo( $field->tag ); ?>_<?php echo( $field->id ); ?>" name="<?php echo( $field->tag ); ?>_<?php echo( $field->id ); ?>" class="cell-content-wrapper profile-field"><?php echo( stripslashes( $field->value ) ); ?></div></td>
 			<td>
 				<select tabindex="1" multiple class="cell-content-wrapper field-roles chzn-select roles-select" id="<?php echo( $field->tag ) ?>_<?php echo( $field->id ) ?>_role" data-placeholder="Choose a role...">
 					<option value=""></option>
