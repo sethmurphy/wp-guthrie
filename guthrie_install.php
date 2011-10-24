@@ -59,6 +59,7 @@ class Guthrie_Install {
 		} else { 
 			add_option( "guthrie_default_post_id", $pageid, false, false ); 
 			add_option( "guthrie_default_page_name", $pagename, false, false ); 
+			add_option( "guthrie_show_profile_page", 'false', false, false );
 		}
 	}
 	
@@ -69,6 +70,7 @@ class Guthrie_Install {
 		wp_delete_post( get_option( "guthrie_default_post_id" ), true ); 
 		delete_option( "guthrie_default_post_id" );
 		delete_option( "guthrie_default_page_name" );
+		delete_option( "guthrie_show_profile_page" );
 	}
 
 	/**********************************************************************
@@ -201,8 +203,8 @@ class Guthrie_Install {
 		$DEFAULT_PROFILE_FIELDS = array( // id, tag, name, description, profile_field_type_id, sequence
 		                                 array(1, "name", "Name", "Your full name.", 1, 10),
 		                                 array(2, "byline", "Byline", "Your public byline.", 1, 20),
-		                                 array(3, "email", "Email", "Your public email address.", 1, 20),
-		                                 array(4, "bio", "Bio", "bio", "Your public profile introduction.", 2, 30),
+		                                 array(3, "email", "Email", "Your public email address.", 1, 30),
+		                                 array(4, "bio", "Bio", "bio", "Your public profile introduction.", 1, 40),
 		                               );
 	
 		$DEFAULT_PROFILE_ROLES = array( // id, name, description, sequence
@@ -231,10 +233,10 @@ class Guthrie_Install {
 		                                           array( 1, 1, 1 ),
 		                                         );
 	
-		for ( $i = 0; $i < sizeof( $DEFAULT_PROFILE_FIELD_TYPES ); $i++) {
-			$field = $DEFAULT_PROFILE_FIELD_TYPES[$i];
-			$table_name = $wpdb->prefix . "guthrie_profile_field_type";
-			if ( $wpdb->get_var( "SELECT count(*) FROM `$table_name`" ) == 0) {
+		$table_name = $wpdb->prefix . "guthrie_profile_field_type";
+		if ( $wpdb->get_var( "SELECT count(*) FROM `$table_name`" ) == 0) {
+			for ( $i = 0; $i < sizeof( $DEFAULT_PROFILE_FIELD_TYPES ); $i++) {
+				$field = $DEFAULT_PROFILE_FIELD_TYPES[$i];
 				// id, name, description
 				$rows_affected = $wpdb->insert( $table_name, 
 				                        array( 'time' => current_time( 'mysql' ), 
@@ -244,90 +246,90 @@ class Guthrie_Install {
 			}
 		}
 	
-		for ( $i = 0; $i < sizeof( $DEFAULT_PROFILE_FIELDS ); $i++) {
-			$field = $DEFAULT_PROFILE_FIELDS[$i];
-			$table_name = $wpdb->prefix . "guthrie_profile_field"; 
-			if ( $wpdb->get_var( "SELECT count(*) FROM `$table_name`" ) == 0 ) {
+		$table_name = $wpdb->prefix . "guthrie_profile_field"; 
+		if ( $wpdb->get_var( "SELECT count(*) FROM `$table_name`" ) == 0 ) {
+			for ( $i = 0; $i < sizeof( $DEFAULT_PROFILE_FIELDS ); $i++) {
+				$field = $DEFAULT_PROFILE_FIELDS[$i];
 				// id, tag, name, description, profile_field_type_id, sequence
 				$rows_affected = $wpdb->insert( $table_name, 
 				                                array( 'time' => current_time( 'mysql' ), 
-				                                       'id' => $field[ 0 ], 
-				                                       'tag' => $field[ 1 ], 
-				                                       'name' => $field[ 2 ], 
-				                                       'description' => $field[ 3 ], 
-				                                       'profile_field_type_id' => $field[ 4 ], 
-				                                       'sequence' => $field[ 5 ] ) );
+				                                       'id' => $field[0], 
+				                                       'tag' => $field[1], 
+				                                       'name' => $field[2], 
+				                                       'description' => $field[3], 
+				                                       'profile_field_type_id' => $field[4], 
+				                                       'sequence' => $field[5] ) );
 			}
 		}
 	
 	
-		for ( $i = 0; $i < sizeof( $DEFAULT_PROFILE_ROLES ); $i++) {
-			$field = $DEFAULT_PROFILE_ROLES[$i];
-			$table_name = $wpdb->prefix . "guthrie_profile_role"; 
-			if ( $wpdb->get_var( "SELECT count(*) FROM '$table_name'" ) == 0) {
+		$table_name = $wpdb->prefix . "guthrie_profile_role"; 
+		if ( $wpdb->get_var( "SELECT count(*) FROM '$table_name'" ) == 0) {
+			for ( $i = 0; $i < sizeof( $DEFAULT_PROFILE_ROLES ); $i++) {
+				$field = $DEFAULT_PROFILE_ROLES[$i];
 				// id, name, description, sequence
 				$rows_affected = $wpdb->insert( $table_name, 
 				                                array( 'time' => current_time( 'mysql' ), 
-				                                       'id' => $field[ 0 ], 
-				                                       'name' => $field[ 1 ], 
-				                                       'description' => $field[ 2 ],	
-				                                       'sequence' => $field[ 3 ] ) );
+				                                       'id' => $field[0], 
+				                                       'name' => $field[1], 
+				                                       'description' => $field[2],	
+				                                       'sequence' => $field[3] ) );
 			}
 		}
 	
-		for ( $i = 0; $i < sizeof( $DEFAULT_PROFILE_FIELD_ROLES ); $i++) {
-			$field = $DEFAULT_PROFILE_FIELD_ROLES[$i];
-			$table_name = $wpdb->prefix . "guthrie_profile_field_role"; 
-			if ( $wpdb->get_var( "SELECT count(*) FROM '$table_name'" ) == 0) {
+		$table_name = $wpdb->prefix . "guthrie_profile_field_role"; 
+		if ( $wpdb->get_var( "SELECT count(*) FROM '$table_name'" ) == 0) {
+			for ( $i = 0; $i < sizeof( $DEFAULT_PROFILE_FIELD_ROLES ); $i++) {
+				$field = $DEFAULT_PROFILE_FIELD_ROLES[$i];
 				// id, profile_field_id, profile_role_id
 				$rows_affected = $wpdb->insert( $table_name, 
 				                                array( 'time' => current_time( 'mysql' ), 
-				                                       'id' => $field[ 0 ], 
-				                                       'profile_field_id' => $field[ 1 ], 
-				                                       'profile_role_id' => $field[ 2 ]) );
+				                                       'id' => $field[0], 
+				                                       'profile_field_id' => $field[1], 
+				                                       'profile_role_id' => $field[2]) );
 			}
 		}
 	
-		for ( $i = 0; $i < sizeof( $DEFAULT_PROFILE_FIELD_INSTANCES ); $i++) {
-			$field = $DEFAULT_PROFILE_FIELD_INSTANCES[$i];
-			$table_name = $wpdb->prefix . "guthrie_profile_field_instance"; 
-			if ( $wpdb->get_var( "SELECT count(*) FROM '$table_name'" ) == 0) {
+		$table_name = $wpdb->prefix . "guthrie_profile_field_instance"; 
+		if ( $wpdb->get_var( "SELECT count(*) FROM '$table_name'" ) == 0) {
+			for ( $i = 0; $i < sizeof( $DEFAULT_PROFILE_FIELD_INSTANCES ); $i++) {
+				$field = $DEFAULT_PROFILE_FIELD_INSTANCES[$i];
 				// id, profile_field_id, value
 				$rows_affected = $wpdb->insert( $table_name, 
 				                                array( 'time' => current_time( 'mysql' ), 
-				                                       'id' => $field[ 0 ], 
-				                                       'profile_field_id' => $field[ 1 ], 
-				                                       'value' => $field[ 2 ], 
-				                                       'sequence' => $field[ 3 ]) );
+				                                       'id' => $field[0], 
+				                                       'profile_field_id' => $field[1], 
+				                                       'value' => $field[2], 
+				                                       'sequence' => $field[3]) );
 			}
 		}
 	
-		for ( $i = 0; $i < sizeof( $DEFAULT_PROFILE_INVITATIONS ); $i++) {
-			$field = $DEFAULT_PROFILE_INVITATIONS[$i];
-			$table_name = $wpdb->prefix . "guthrie_profile_invitation"; 
-			if ( $wpdb->get_var( "SELECT count(*) FROM '$table_name'" ) == 0) {
+		$table_name = $wpdb->prefix . "guthrie_profile_invitation"; 
+		if ( $wpdb->get_var( "SELECT count(*) FROM '$table_name'" ) == 0) {
+			for ( $i = 0; $i < sizeof( $DEFAULT_PROFILE_INVITATIONS ); $i++) {
+				$field = $DEFAULT_PROFILE_INVITATIONS[$i];
 				// id, name, description, email, guid
 				$rows_affected = $wpdb->insert( $table_name, 
 				                                array( 'time' => current_time('mysql' ), 
-				                                       'id' => $field[ 0 ], 
-				                                       'name' => $field[ 1 ], 
-				                                       'description' => $field[ 2 ], 
-				                                       'email' => $field[ 3 ], 
-				                                       'guid' => $field[ 4 ]) );
+				                                       'id' => $field[0], 
+				                                       'name' => $field[1], 
+				                                       'description' => $field[2], 
+				                                       'email' => $field[3], 
+				                                       'guid' => $field[4]) );
 			}
 		}
 	
 	
-		for ( $i = 0; $i < sizeof( $DEFAULT_PROFILE_INVITATION_ROLES ); $i++) {
-			$field = $DEFAULT_PROFILE_INVITATION_ROLES[$i];
-			$table_name = $wpdb->prefix . "guthrie_profile_invitation_role"; 
-			if ( $wpdb->get_var( "SELECT count(*) FROM '$table_name'" ) == 0) {
+		$table_name = $wpdb->prefix . "guthrie_profile_invitation_role"; 
+		if ( $wpdb->get_var( "SELECT count(*) FROM '$table_name'" ) == 0) {
+			for ( $i = 0; $i < sizeof( $DEFAULT_PROFILE_INVITATION_ROLES ); $i++) {
+				$field = $DEFAULT_PROFILE_INVITATION_ROLES[$i];
 				// id, profile_invitation_id, profile_role_id
 				$rows_affected = $wpdb->insert( $table_name, 
 				                                array( 'time' => current_time( 'mysql' ), 
-				                                       'id' => $field[ 0 ], 
-				                                       'profile_invitation_id' => $field[ 1 ], 
-				                                       'profile_role_id' => $field[ 2 ]) );
+				                                       'id' => $field[0], 
+				                                       'profile_invitation_id' => $field[1], 
+				                                       'profile_role_id' => $field[2]) );
 			}
 		}
 
