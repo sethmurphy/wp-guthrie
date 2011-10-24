@@ -44,3 +44,22 @@ document.updateFieldRoles = function(element) {
 		}
 	});
 }
+
+document.updateProfilePageVisibility = function(element) {
+	var $this = $(element.target);
+	var profile_page_visibility = $this.val();
+
+	var data = "action=guthrie_update_profile_page_visibility" + 
+		         "&value=" + profile_page_visibility;
+
+	$.ajax({
+		type: "POST",
+		url: ajaxurl,
+		data: data,
+		dataType: "json",
+		complete: function( response ){
+			// do nothing for now
+		}
+	});
+}
+

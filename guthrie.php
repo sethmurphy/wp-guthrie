@@ -3,7 +3,7 @@
 Plugin Name: Guthrie
 Plugin URI: http://guthrie.sethmurphy.com
 Description: A place to share your identity with those you know.
-Version: 0.8
+Version: 0.8.1
 Author: Seth Murphy
 Author URI: http://sethmurphy.com
 License: GPL2
@@ -33,8 +33,6 @@ class Guthrie {
 	}
 
 	function __construct() {
-		// constructor
-
 		// Do our install stuff upon activation
 		register_activation_hook( __FILE__, array( &$this, 'install') );
 		
@@ -43,7 +41,7 @@ class Guthrie {
 		register_deactivation_hook( __FILE__, array( &$this, 'deactivate') );
 
 		// Add the admin menu ( all other admin hooks are in menu() )
-		add_action( 'admin_menu', array( &$this, 'menu') );
+		add_action( 'admin_menu', array( &$this, 'admin_menu') );
 		
 		// used to embed a profiles anywhere using [GUTHRIE]
 		add_filter( 'the_content', array( &$this, 'profile') );
@@ -51,23 +49,23 @@ class Guthrie {
 		// register our styles (non-admin)
 		add_action('wp_print_styles', array(&$this, 'add_guthrie_stylesheet'));
 
-		// register our ajax calls
-		// this should probably be somewhere else, but I couldn't get it to work if I called while loading the admin scripts.
-		add_action( 'wp_ajax_guthrie_update_profile_field_roles',            array( &$this, 'ajax_update_profile_field_roles' ) );            // action = 'guthrie_update_profile_field_roles'
-		add_action( 'wp_ajax_guthrie_update_profile_invitation_roles',       array( &$this, 'ajax_update_profile_invitation_roles' ) );       // action = 'guthrie_update_profile_invitation_roles'
-		add_action( 'wp_ajax_guthrie_update_profile_field_value',            array( &$this, 'ajax_update_profile_field_value' ) );            // action = 'guthrie_update_profile_field_value'
-		add_action( 'wp_ajax_guthrie_update_profile_field_sequence',         array( &$this, 'ajax_update_profile_field_sequence' ) );         // action = 'guthrie_update_profile_field_sequence'	
-		add_action( 'wp_ajax_guthrie_remove_profile_field_instance',         array( &$this, 'ajax_remove_profile_field_instance' ) );         // action = 'guthrie_remove_profile_field_instance'	
-
-		add_action( 'wp_ajax_guthrie_update_profile_role_name',              array( &$this, 'ajax_update_profile_role_name' ) );              // action = 'guthrie_update_profile_role_name'
-		add_action( 'wp_ajax_guthrie_update_profile_role_description',       array( &$this, 'ajax_update_profile_role_description' ) );       // action = 'guthrie_update_profile_role_description'
-
-		add_action( 'wp_ajax_guthrie_update_profile_invitation_name',        array( &$this, 'ajax_update_profile_invitation_name' ) );        // action = 'guthrie_update_profile_invitation_name'
-		add_action( 'wp_ajax_guthrie_update_profile_invitation_description', array( &$this, 'ajax_update_profile_invitation_description' ) ); // action = 'guthrie_update_profile_invitation_description'
-		add_action( 'wp_ajax_guthrie_remove_profile_invitation',             array( &$this, 'ajax_remove_profile_invitation' ) );             // action = 'guthrie_remove_profile_invitation'
-		add_action( 'wp_ajax_guthrie_remove_profile_role',                   array( &$this, 'ajax_remove_profile_role' ) );                   // action = 'guthrie_remove_profile_role'
-		add_action( 'wp_ajax_guthrie_remove_profile_field_instance',         array( &$this, 'ajax_remove_profile_field_instance' ) );         // action = 'guthrie_remove_profile_field_instance'
-
+		// register our menu hook to allow hiding of menu items (default hidden)
+		add_filter( 'get_pages', array( &$this, 'set_profile_page_visibility' ) );
+		
+		// register our ajax calls (all handled by the same delagator with work oflaoded to a separate class when needed)
+		add_action( 'wp_ajax_guthrie_update_profile_field_roles',            array( &$this, 'do_ajax' ) ); // action = 'guthrie_update_profile_field_roles'
+		add_action( 'wp_ajax_guthrie_update_profile_invitation_roles',       array( &$this, 'do_ajax' ) ); // action = 'guthrie_update_profile_invitation_roles'
+		add_action( 'wp_ajax_guthrie_update_profile_field_value',            array( &$this, 'do_ajax' ) ); // action = 'guthrie_update_profile_field_value'
+		add_action( 'wp_ajax_guthrie_update_profile_field_sequence',         array( &$this, 'do_ajax' ) ); // action = 'guthrie_update_profile_field_sequence'	
+		add_action( 'wp_ajax_guthrie_remove_profile_field_instance',         array( &$this, 'do_ajax' ) ); // action = 'guthrie_remove_profile_field_instance'	
+		add_action( 'wp_ajax_guthrie_update_profile_role_name',              array( &$this, 'do_ajax' ) ); // action = 'guthrie_update_profile_role_name'
+		add_action( 'wp_ajax_guthrie_update_profile_role_description',       array( &$this, 'do_ajax' ) ); // action = 'guthrie_update_profile_role_description'
+		add_action( 'wp_ajax_guthrie_update_profile_page_visibility',        array( &$this, 'do_ajax' ) ); // action = 'guthrie_update_profile_page_visibility'
+		add_action( 'wp_ajax_guthrie_update_profile_invitation_name',        array( &$this, 'do_ajax' ) ); // action = 'guthrie_update_profile_invitation_name'
+		add_action( 'wp_ajax_guthrie_update_profile_invitation_description', array( &$this, 'do_ajax' ) ); // action = 'guthrie_update_profile_invitation_description'
+		add_action( 'wp_ajax_guthrie_remove_profile_invitation',             array( &$this, 'do_ajax' ) ); // action = 'guthrie_remove_profile_invitation'
+		add_action( 'wp_ajax_guthrie_remove_profile_role',                   array( &$this, 'do_ajax' ) ); // action = 'guthrie_remove_profile_role'
+		add_action( 'wp_ajax_guthrie_remove_profile_field_instance',         array( &$this, 'do_ajax' ) ); // action = 'guthrie_remove_profile_field_instance'
 	}
 	
 	function install () {
@@ -132,14 +130,41 @@ class Guthrie {
     	$this->status_message = '';
     }
 	}
-
-	function menu() {
+	
+	/**
+	 * create our admin menu
+	 */
+	function admin_menu() {
 		$mypage = add_options_page( 'Guthrie Options', 'Guthrie', 'manage_options', 'guthrie', array( &$this, 'options') );
 
 		add_action( "admin_print_scripts-$mypage", array(&$this,'admin_head') );
 		add_action( 'admin_notices', array( &$this, 'show_admin_messages' ) );
 	}
-	
+
+	/**
+	 * set the visibility of the default profile page menu item
+	 */
+	function set_profile_page_visibility( $pages ) {
+		$length = count( $pages );
+		$page_id = get_option( 'guthrie_default_post_id' );
+		$show_page = get_option( 'guthrie_show_profile_page' );
+		if ( isset( $show_page ) && 'true' == $show_page ) {
+			$show_page = true;
+		} else {
+			$show_page = false;
+		}
+		$new_pages = array();
+		for ( $i = 0; $i < $length; $i++ ) {
+			$page = $pages[ $i ];
+			if ( $page->ID == $page_id ) {
+				if ( $show_page ) { $new_pages[] = $page; } 
+			}	else	{
+				$new_pages[] = $page;
+			}
+		}
+		return $new_pages;
+	}
+		
 	/* manage our plugin option in admin */
 	function options() {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -434,75 +459,20 @@ class Guthrie {
 	 ****************************************/
 
 	/***************************************************
-	 *  Wrappers for our AJAX calls in guthrie_ajax.php
+	 *  Delegate for our AJAX calls in guthrie_ajax.php
 	 ***************************************************/
-	function initAJAX(){
+	function do_ajax() {
 		if( ! isset( $this->ajax ) ) {
 			require_once( 'guthrie_ajax.php' );
 			$this->ajax = new Guthrie_Ajax( &$this );
 		}
+		$method = substr($_POST['action'], 8);
+		call_user_func( array($this->ajax, $method) );
+		exit;
 	}
 
-	function ajax_update_profile_field_sequence() {
-		$this->initAJAX();
-		$this->ajax->update_profile_field_sequence();
-	}
-
-	function ajax_update_profile_field_value() {
-		$this->initAJAX();
-		$this->ajax->update_profile_field_value();
-	}
-
-	function ajax_update_profile_field_roles() {
-		$this->initAJAX();
-		$this->ajax->update_profile_field_roles();
-	}	
-
-	function ajax_remove_profile_field_instance() {
-		$this->initAJAX();
-		$this->ajax->remove_profile_field_instance();
-	}	
-
-	function ajax_remove_profile_invitation() {
-		$this->initAJAX();
-		$this->ajax->remove_profile_invitation();
-	}	
-
-	function ajax_remove_profile_role() {
-		$this->initAJAX();
-		$this->ajax->remove_profile_role();
-	}	
-
-	function ajax_update_profile_role_name() {
-		$this->initAJAX();
-		$this->ajax->update_profile_role_name();
-	}
-
-	function ajax_update_profile_role_description() {
-		$this->initAJAX();
-		$this->ajax->update_profile_role_description();
-	}
-
-	function ajax_update_profile_invitation_name() {
-		$this->initAJAX();
-		$this->ajax->update_profile_invitation_name();
-	}
-
-	function ajax_update_profile_invitation_description() {
-		$this->initAJAX();
-		$this->ajax->update_profile_invitation_description();
-	}
-
-	function ajax_update_profile_invitation_roles() {
-		$this->initAJAX();
-		$this->ajax->update_profile_invitation_roles();
-	}	
-
-	/*******************************************************
-	 *  End of AJAX wrappers
-	 ********************************************************/
 	/********************************************************
-	 * common gui stuff
+	 * some common gui stuff
 	 ********************************************************/
 	function delete_button( $element_id ) {
 		return '<span class="delete-button" id="' . $element_id . '"/>';

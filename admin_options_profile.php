@@ -34,6 +34,7 @@ class Guthrie_Admin_Options_Profile {
 	public $type = '';
 	public $description = '';
 	public $value = '';
+	public $profile_page_visible = 'false';
 	public $roles = array();
 
 	public $profile_roles = array();
@@ -48,6 +49,13 @@ class Guthrie_Admin_Options_Profile {
 
 	function __construct( $guthrie = null ) {
 		$this->guthrie = $guthrie;
+		$profile_page_visible = get_option( 'guthrie_show_profile_page' );
+		if ( isset( $profile_page_visible ) ) {
+			$this->value_profile_page_visible = $profile_page_visible;
+		} else {
+				add_option( 'guthrie_show_profile_page', 'false' );
+		}
+		
 		if( isset( $_POST[ 'profile-field-add-submitted' ] ) ) {
 			$this->do_submit();
 		}

@@ -123,13 +123,27 @@ class Guthrie_Ajax {
 			$wpdb->query( $sql );
 			$success = true;
 		}
+	}
+	
+	function update_profile_page_visibility() {
+		$success = false;
+		global $wpdb;
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+		$value = '';
+		if( array_key_exists ( 'value' , $_POST ) ) {
+			$value = $_POST[ 'value' ];
+			if ( 'true' == $value ) {
+				update_option( 'guthrie_show_profile_page', 'true' );
+			} else {
+				update_option( 'guthrie_show_profile_page', 'false' );
+			}
+			$success = true;
+		}
 
 		// generate the response
-		$response = json_encode( array( 'update_profile_field_value' => $success,
-		                                 'element_id' => $element_id,
-		                                 'value' => $value,
-		                                 'field_instance_id' => $field_instance_id,
-		                                 'original_value' => $original_value ) );
+		$response = json_encode( array( 'update_profile_page_visibility' => $success,
+		                                 'value' => $value ) );
 
 		// response output
 		header( "Content-Type: application/json" );

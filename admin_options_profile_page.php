@@ -30,6 +30,24 @@ $profile_roles = $guthrie->get_profile_roles();
 $profile_field_types = $guthrie->get_profile_field_types();
 $admin_options_tab = $admin_options->admin_options_tab;
 ?>
+
+<h3 class="profile-fields">Profile Page</h3>
+<table class="form-table">
+	<tbody>
+		<tr valign="top">
+			<th class="row">
+				<label for="profile-field-add-field-value">Show Profile Page in Menu</label>
+			</th>
+			<td>
+				<select name="profile-page-visibility" id="profile-page-visibility">
+					<option <?php if( 'true' == $admin_options_tab->value_profile_page_visible ){ echo("selected='selected' "); } ?>value="true">Yes</option>
+					<option <?php if( 'true' != $admin_options_tab->value_profile_page_visible ){ echo("selected='selected' "); } ?>value="false">No</option>
+				</select>	
+			</td>
+		</tr>			
+	</tbody>
+</table>
+
 <h3 class="profile-fields">Profile Fields</h3>
 <table id="profile-fields">
 	<thead>

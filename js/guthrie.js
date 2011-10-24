@@ -119,6 +119,7 @@ $( document ).ready( function() {
 	// for our "edit in place" table cells	
 	$( "#profile-fields .chzn-select" ).chosen( { no_results_text: 'No results matched.' } ).change( document.updateFieldRoles );
 	$( ".invitation-roles" ).chosen( { no_results_text: 'No results matched.' } ).change( document.updateInvitationRoles );
+	$( "#profile-page-visibility" ).change( document.updateProfilePageVisibility );
 	
 	
 	$( ".profile-field" ).guthrieEditInPlace(
@@ -270,5 +271,5 @@ $( document ).ready( function() {
 				}
 			});
 		}
-	}); 
+	});			 
 });
