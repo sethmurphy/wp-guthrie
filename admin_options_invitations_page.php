@@ -115,7 +115,7 @@ $admin_options_tab = $admin_options->admin_options_tab;
 					<label for="profile-invite-field-roles">Relationships </label>
 				</th>
 				<td>
-					<select multiple class="profile-invite-roles chzn-select roles-select" name="profile-invite-roles" id="profile-invite-roles" data-placeholder="Choose a role...">
+					<select multiple class="profile-invite-roles chzn-select roles-select" name="profile-invite-roles[]" id="profile-invite-roles" data-placeholder="Choose a role...">
 						<option value=""></option>
 
 						<?php foreach( $profile_roles as $role ): ?>
