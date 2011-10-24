@@ -82,7 +82,7 @@ class Guthrie_Admin_Options_Profile {
 			$has_error = true;
 		}
 	
-		$this->type = trim( $_POST[ 'profile-field-add-field-name' ]);
+		$this->type = trim( $_POST[ 'profile-field-add-field-type' ] );
 		if( '' == $this->type ) {
 			$this->name_error = 'Please select a field type.';
 			$has_error = true;

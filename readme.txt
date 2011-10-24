@@ -13,7 +13,7 @@ Create a custom profile with Guthrie to control your online profile and share it
 Be the author of your identity! Guthrie allows you to create and manage an online profile page. Send invitations and share your profile among all your trusted (or not so trusted) family, friends and associates, sharing only what you need with each one as you see fit. Every invitation sent contains a link to unlock your unique profile based on your relationship with them.
 
 == Installation ==
-1. Create a folder named 'guthrie' in your wprdpress plugins directory (usually 'wp-contents/plugins'.)
+1. Create a folder named 'guthrie' in your wordpress plugins directory (usually 'wp-contents/plugins'.)
 2. Upload the contents of this repository to to the `guthrie` folder.
 3. Activate the plugin through the 'Plugins' menu in WordPress.
 4. Configure your profile and send invitations from Settings -> Guthrie.
@@ -22,13 +22,20 @@ Be the author of your identity! Guthrie allows you to create and manage an onlin
    Navigate to the default profile or 'My Guthrie' page: [site-url]/?name=my-guthrie or [site-url]/my-guthrie
 
 == Frequently Asked Questions ==
-1. Why is this plugin called Guthrie? It is named after Woody Guthrie a US folk singer who wrote 'This land is Your Land' among many other songs. 
+== Why is this plugin called Guthrie? ==
+It is named after Woody Guthrie a US folk singer who wrote 'This land is Your Land' among many other songs. 
 
 == Changelog ==
-This is the first release, there are no changes yet ...
+== 0.8.1 ==
+* HTML values now supported
+* textareas now used to edit text in admin for profile field values taking up more than line.
+* textarea no longer a supported "type" for a field.
+* option added to hide/show default profile page in the menu (hide is now the default)
 
 == Upgrade Notice ==
-This is the first release, there are no upgrade notices yet ...
+== 0.8.1 ==
+* Please deactivate/activate the plugin to remove the textarea type
+* If you wish to have the default profile page still visible in menus you must enable it in Settings -> Guthrie
 
 == Screenshots ==
 1. A simple Guthrie public profile.
