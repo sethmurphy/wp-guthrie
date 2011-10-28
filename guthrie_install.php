@@ -197,8 +197,8 @@ class Guthrie_Install {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	
 		$DEFAULT_PROFILE_FIELD_TYPES = array( // id, name, description
-																			array(1, "Text", "Any Text/HTML" )
-																		);
+		                                      array(1, "Text", "Any Text/HTML" )
+		                                    );
 	
 		$DEFAULT_PROFILE_FIELDS = array( // id, tag, name, description, profile_field_type_id, sequence
 		                                 array(1, "name", "Name", "Your full name.", 1, 10),
@@ -264,7 +264,7 @@ class Guthrie_Install {
 	
 	
 		$table_name = $wpdb->prefix . "guthrie_profile_role"; 
-		if ( $wpdb->get_var( "SELECT count(*) FROM '$table_name'" ) == 0) {
+		if ( $wpdb->get_var( "SELECT count(*) FROM `$table_name`" ) == 0) {
 			for ( $i = 0; $i < sizeof( $DEFAULT_PROFILE_ROLES ); $i++) {
 				$field = $DEFAULT_PROFILE_ROLES[$i];
 				// id, name, description, sequence
@@ -278,7 +278,7 @@ class Guthrie_Install {
 		}
 	
 		$table_name = $wpdb->prefix . "guthrie_profile_field_role"; 
-		if ( $wpdb->get_var( "SELECT count(*) FROM '$table_name'" ) == 0) {
+		if ( $wpdb->get_var( "SELECT count(*) FROM `$table_name`" ) == 0) {
 			for ( $i = 0; $i < sizeof( $DEFAULT_PROFILE_FIELD_ROLES ); $i++) {
 				$field = $DEFAULT_PROFILE_FIELD_ROLES[$i];
 				// id, profile_field_id, profile_role_id
@@ -291,7 +291,7 @@ class Guthrie_Install {
 		}
 	
 		$table_name = $wpdb->prefix . "guthrie_profile_field_instance"; 
-		if ( $wpdb->get_var( "SELECT count(*) FROM '$table_name'" ) == 0) {
+		if ( $wpdb->get_var( "SELECT count(*) FROM `$table_name`" ) == 0) {
 			for ( $i = 0; $i < sizeof( $DEFAULT_PROFILE_FIELD_INSTANCES ); $i++) {
 				$field = $DEFAULT_PROFILE_FIELD_INSTANCES[$i];
 				// id, profile_field_id, value
@@ -305,7 +305,7 @@ class Guthrie_Install {
 		}
 	
 		$table_name = $wpdb->prefix . "guthrie_profile_invitation"; 
-		if ( $wpdb->get_var( "SELECT count(*) FROM '$table_name'" ) == 0) {
+		if ( $wpdb->get_var( "SELECT count(*) FROM `$table_name`" ) == 0) {
 			for ( $i = 0; $i < sizeof( $DEFAULT_PROFILE_INVITATIONS ); $i++) {
 				$field = $DEFAULT_PROFILE_INVITATIONS[$i];
 				// id, name, description, email, guid
@@ -321,7 +321,7 @@ class Guthrie_Install {
 	
 	
 		$table_name = $wpdb->prefix . "guthrie_profile_invitation_role"; 
-		if ( $wpdb->get_var( "SELECT count(*) FROM '$table_name'" ) == 0) {
+		if ( $wpdb->get_var( "SELECT count(*) FROM `$table_name`" ) == 0) {
 			for ( $i = 0; $i < sizeof( $DEFAULT_PROFILE_INVITATION_ROLES ); $i++) {
 				$field = $DEFAULT_PROFILE_INVITATION_ROLES[$i];
 				// id, profile_invitation_id, profile_role_id
@@ -333,6 +333,8 @@ class Guthrie_Install {
 			}
 		}
 
+		
+		// some stuff needed for upgrades from previous versions
 		// remove our textarea profile_field_type if we exist and revert any references to the 'Text' type ( id==1 )
 		$table_name = $wpdb->prefix . "guthrie_profile_field_type"; 
 		if ( $wpdb->get_var( "SELECT count(*) FROM `$table_name` where `name` = 'TextArea' and id = 2" ) == 1 ) {
@@ -340,6 +342,186 @@ class Guthrie_Install {
 			$table_name = $wpdb->prefix . "guthrie_profile_field"; 
 			// update our profile field type ( only one exists now ... )
 			$wpdb->query( "UPDATE `$table_name` set `profile_field_type_id` = 1 WHERE `profile_field_type_id` < 3" );
+		}
+
+		// see if we have the 'default' field in guthrie_profile_field, if not we have lot's of updates to do for microformat
+		$table_name = $wpdb->prefix . "guthrie_profile_field";
+		
+		
+		if( 0 === $wpdb->query("SHOW COLUMNS FROM `$table_name` WHERE field = 'is_default'" ) ) {
+	                $instance_table_name = $wpdb->prefix . "guthrie_profile_field_instance";
+
+			// add the 'required' field
+			$wpdb->query( "ALTER TABLE $table_name ADD COLUMN is_default INT DEFAULT 0" );
+			// update the name field
+			$wpdb->query( "UPDATE $table_name SET tag='fn', name='Full Name', is_default = 1 WHERE id=1" ); 
+
+                        // update the email field
+                        $wpdb->query( "UPDATE $table_name SET tag='email', name='Email', is_default = 1 WHERE id=3" );
+
+			// Add the rest of the hcard fields with no value (meaning no display) and no relationship
+			$wpdb->insert( $table_name,
+					array( 'time' => current_time( 'mysql' ),
+			                       'id' => null,
+			                       'profile_field_type_id' => 1,
+			                       'tag' => 'org',
+			                       'name' => 'Organization',
+			                       'description' => 'Organization or Company Name',
+			                       'sequence' => '1000',
+			                       'is_default' => 1 ) 
+			                     );
+			$profile_field_id = $wpdb->get_var( "SELECT LAST_INSERT_ID();" );
+                        $rows_affected = $wpdb->insert( $instance_table_name,
+                                                        array( 'time' => current_time( 'mysql' ),
+                                                               'id' => null,
+                                                               'profile_field_id' => $profile_field_id,
+                                                               'value' => '',
+                                                               'sequence' => 1000) );
+			
+			$wpdb->insert( $table_name,
+                                        array( 'time' => current_time( 'mysql' ),
+                                               'id' => null,
+                                               'profile_field_type_id' => 1,
+                                               'tag' => 'street-address',
+                                               'name' => 'Street Address',
+                                               'description' => 'Street Address',
+                                               'sequence' => '1010',
+                                               'is_default' => 1 ) 
+                                             );  
+                        $profile_field_id = $wpdb->get_var( "SELECT LAST_INSERT_ID();" );
+                        $rows_affected = $wpdb->insert( $instance_table_name,
+                                                        array( 'time' => current_time( 'mysql' ),
+                                                               'id' => null,
+                                                               'profile_field_id' => $profile_field_id,
+                                                               'value' => '',
+                                                               'sequence' => 1010) );
+
+                        $wpdb->insert( $table_name,
+                                        array( 'time' => current_time( 'mysql' ),
+                                               'id' => null,
+                                               'profile_field_type_id' => 1,
+                                               'tag' => 'locality',
+                                               'name' => 'Town',
+                                               'description' => 'Town or Locality',
+                                               'sequence' => '1020',
+                                               'is_default' => 1 ) 
+                                             );  
+                        $profile_field_id = $wpdb->get_var( "SELECT LAST_INSERT_ID();" );
+                        $rows_affected = $wpdb->insert( $instance_table_name,
+                                                        array( 'time' => current_time( 'mysql' ),
+                                                               'id' => null,
+                                                               'profile_field_id' => $profile_field_id,
+                                                               'value' => '',
+                                                               'sequence' => 1020) );
+
+                        $wpdb->insert( $table_name,
+                                        array( 'time' => current_time( 'mysql' ),
+                                               'id' => null,
+                                               'profile_field_type_id' => 1,
+                                               'tag' => 'region',
+                                               'name' => 'State',
+                                               'description' => 'State or Province',
+                                               'sequence' => '1030',
+                                               'is_default' => 1 ) 
+                                             );  
+                        $profile_field_id = $wpdb->get_var( "SELECT LAST_INSERT_ID();" );
+                        $rows_affected = $wpdb->insert( $instance_table_name,
+                                                        array( 'time' => current_time( 'mysql' ),
+                                                               'id' => null,
+                                                               'profile_field_id' => $profile_field_id,
+                                                               'value' => '',
+                                                               'sequence' => 1030) );
+
+                        $wpdb->insert( $table_name,
+                                        array( 'time' => current_time( 'mysql' ),
+                                               'id' => null,
+                                               'profile_field_type_id' => 1,
+                                               'tag' => 'postal-code',
+                                               'name' => 'ZIP Code',
+                                               'description' => 'ZIP or Postal Code',
+                                               'sequence' => '1040',
+                                               'is_default' => 1 ) 
+                                             );  
+                        $profile_field_id = $wpdb->get_var( "SELECT LAST_INSERT_ID();" );
+                        $rows_affected = $wpdb->insert( $instance_table_name,
+                                                        array( 'time' => current_time( 'mysql' ),
+                                                               'id' => null,
+                                                               'profile_field_id' => $profile_field_id,
+                                                               'value' => '',
+                                                               'sequence' => 1040) );
+
+                        $wpdb->insert( $table_name,
+                                        array( 'time' => current_time( 'mysql' ),
+                                               'id' => null,
+                                               'profile_field_type_id' => 1,
+                                               'tag' => 'country-name',
+                                               'name' => 'Country',
+                                               'description' => 'Full Country Name',
+                                               'sequence' => '1050',
+                                               'is_default' => 1 ) 
+                                             );  
+                        $profile_field_id = $wpdb->get_var( "SELECT LAST_INSERT_ID();" );
+                        $rows_affected = $wpdb->insert( $instance_table_name,
+                                                        array( 'time' => current_time( 'mysql' ),
+                                                               'id' => null,
+                                                               'profile_field_id' => $profile_field_id,
+                                                               'value' => '',
+                                                               'sequence' => 1050) );
+
+                        $wpdb->insert( $table_name,
+                                        array( 'time' => current_time( 'mysql' ),
+                                               'id' => null,
+                                               'profile_field_type_id' => 1,
+                                               'tag' => 'org',
+                                               'name' => 'Organization',
+                                               'description' => 'Organization or Company Name',
+                                               'sequence' => '1060',
+                                               'is_default' => 1 ) 
+                                             );  
+                        $profile_field_id = $wpdb->get_var( "SELECT LAST_INSERT_ID();" );
+                        $rows_affected = $wpdb->insert( $instance_table_name,
+                                                        array( 'time' => current_time( 'mysql' ),
+                                                               'id' => null,
+                                                               'profile_field_id' => $profile_field_id,
+                                                               'value' => '',
+                                                               'sequence' => 1060) );
+
+                        $wpdb->insert( $table_name,
+                                        array( 'time' => current_time( 'mysql' ),
+                                               'id' => null,
+                                               'profile_field_type_id' => 1,
+                                               'tag' => 'tel',
+                                               'name' => 'Phone',
+                                               'description' => 'Primary Phone Number',
+                                               'sequence' => '1070',
+                                               'is_default' => 1 ) 
+                                             );  
+                        $profile_field_id = $wpdb->get_var( "SELECT LAST_INSERT_ID();" );
+                        $rows_affected = $wpdb->insert( $instance_table_name,
+                                                        array( 'time' => current_time( 'mysql' ),
+                                                               'id' => null,
+                                                               'profile_field_id' => $profile_field_id,
+                                                               'value' => '',
+                                                               'sequence' => 1070) );
+
+                        $wpdb->insert( $table_name,
+                                        array( 'time' => current_time( 'mysql' ),
+                                               'id' => null,
+                                               'profile_field_type_id' => 1,
+                                               'tag' => 'photo',
+                                               'name' => 'Image URL',
+                                               'description' => 'Photo or Image URL',
+                                               'sequence' => '1080',
+                                               'is_default' => 1 )
+                                             );
+
+                        $profile_field_id = $wpdb->get_var( "SELECT LAST_INSERT_ID();" );
+                        $rows_affected = $wpdb->insert( $instance_table_name,
+                                                        array( 'time' => current_time( 'mysql' ),
+                                                               'id' => null,
+                                                               'profile_field_id' => $profile_field_id,
+                                                               'value' => '',
+                                                               'sequence' => 1080) );
 		}		
 	} 
 	
